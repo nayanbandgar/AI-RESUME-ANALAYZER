@@ -4,11 +4,11 @@ export default function Landing() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white border border-gray-200 rounded-2xl p-10 w-full max-w-md text-center">
+    <div className="min-h-screen bg-linear-to-br from-[#dae2f8] to-[#d6a4a4] flex items-center justify-center px-4">
+      <div className="bg-gray-100 border border-white border-bold rounded-2xl p-10 w-full max-w-md text-center">
 
         {/* Logo */}
-        <div className="w-14 h-14 rounded-full bg-blue-50 text-blue-600 font-medium text-lg flex items-center justify-center mx-auto mb-4">
+        <div className="w-14 h-14 rounded-full bg-blue-100 text-blue-600 font-medium text-lg flex items-center justify-center mx-auto mb-4">
           HR
         </div>
 

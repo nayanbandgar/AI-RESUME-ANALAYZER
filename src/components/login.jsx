@@ -42,7 +42,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-[#dae2f8] to-[#d6a4a4] flex items-center justify-center px-4">
       <div className="bg-white border border-gray-200 rounded-2xl p-10 w-full max-w-md">
 
         {/* Header */}
@@ -98,7 +98,7 @@ export default function Login() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
+          className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
         >
           Sign in
         </button>

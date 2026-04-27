@@ -70,7 +70,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-[#dae2f8] to-[#d6a4a4] flex items-center justify-center px-4">
       <div className="bg-white border border-gray-200 rounded-2xl p-10 w-full max-w-md">
 
         {/* Header */}
@@ -115,7 +115,7 @@ export default function Signup() {
             <button
               type="button"
               onClick={handleSendOtp}
-              className="px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap"
+              className="px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-700 transition-colors whitespace-nowrap"
             >
               {otpSent ? "Resend" : "Send OTP"}
             </button>
@@ -162,7 +162,7 @@ export default function Signup() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
+          className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
         >
           Create account
         </button>

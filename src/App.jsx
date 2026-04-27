@@ -8,7 +8,9 @@ import Layout from "./components/layout.jsx";
 import Dashboard from "./components/dashboard.jsx";
 import Analyze from "./components/analyze.jsx";
 import Results from "./components/result.jsx";
-import UploadResume from "./components/uploadresumes.jsx";
+import UploadResume from "./components/uploadresume.jsx";
+import Candidate from "./components/candidate.jsx";
+import Settings from "./components/setting.jsx";
 
 export default function App() {
   return (
@@ -20,12 +22,12 @@ export default function App() {
       <Route path="/sidebar" element={<Sidebar />} />
         <Route element={<Layout />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/uploadresumes" element={<UploadResume />} />
+        <Route path="/upload" element={<UploadResume />} />
         <Route path="/analyze" element={<Analyze />} />
-        <Route path="/result" element={<Results />} />
-        <Route path="/candidates" element={<div className="text-gray-700">Candidates Page</div>} />
-        <Route path="/profile" element={<div className="text-gray-700">Profile Page<ProfilePage/></div> } />
-        <Route path="/settings" element={<div className="text-gray-700">Settings Page</div>} />
+        <Route path="/results" element={<Results />} />
+        <Route path="/candidates" element={<Candidate/>} />
+        <Route path="/profile" element={<ProfilePage/> } />
+        <Route path="/settings" element={<Settings/>} />
         </Route>
     </Routes>
   );
