@@ -1,0 +1,6 @@
+fastapi-0.136.1
+uvicorn-0.46.0
+python_multipart-0.0.28
+bcrypt-5.0.0
+annotated_doc-0.0.4
+h11-0.16.0
