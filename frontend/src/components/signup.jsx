@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", otp: "", password: "" });
   const [errors, setErrors] = useState({});
   const [otpSent, setOtpSent] = useState(false);
   const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const validate = () => {
     const newErrors = {};
@@ -20,13 +24,7 @@ export default function Signup() {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    if (!otpSent) {
-      newErrors.otp = "Please send OTP to your email first.";
-    } else if (!form.otp.trim()) {
-      newErrors.otp = "OTP is required.";
-    } else if (form.otp.length !== 6) {
-      newErrors.otp = "OTP must be 6 digits.";
-    }
+    
 
     if (!form.password.trim()) {
       newErrors.password = "Password is required.";
@@ -42,20 +40,20 @@ export default function Signup() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSendOtp = () => {
-    if (!form.email.trim()) {
-      setErrors({ ...errors, email: "Please enter your email before sending OTP." });
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      setErrors({ ...errors, email: "Please enter a valid email address." });
-      return;
-    }
-    // Add your OTP API call here
-    setOtpSent(true);
-    setErrors({ ...errors, email: "" });
-    alert(`OTP sent to ${form.email}`);
-  };
+  // const handleSendOtp = () => {
+  //   if (!form.email.trim()) {
+  //     setErrors({ ...errors, email: "Please enter your email before sending OTP." });
+  //     return;
+  //   }
+    // if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    //   setErrors({ ...errors, email: "Please enter a valid email address." });
+    //   return;
+    // }
+  //   // Add your OTP API call here
+  //   setOtpSent(true);
+  //   setErrors({ ...errors, email: "" });
+  //   alert(`OTP sent to ${form.email}`);
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,7 +86,7 @@ export default function Signup() {
           <input
             type="text"
             name="name"
-            placeholder="John Doe"
+            placeholder="XYZ"
             value={form.name}
             onChange={handleChange}
             className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${
@@ -98,7 +96,7 @@ export default function Signup() {
           {errors.name && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.name}</p>}
         </div>
 
-        {/* Email + OTP Button */}
+        {/* Email + OTP Butto */}
         <div className="mb-5">
           <label className="block text-sm text-gray-500 mb-1.5">Email address</label>
           <div className="flex gap-2">
@@ -112,22 +110,21 @@ export default function Signup() {
                 errors.email ? "border-red-400" : "border-gray-200 focus:border-blue-300"
               }`}
             />
-            <button
+            {/* <button
               type="button"
-              onClick={handleSendOtp}
               className="px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg cursor-pointer hover:bg-gray-700 transition-colors whitespace-nowrap"
             >
               {otpSent ? "Resend" : "Send OTP"}
-            </button>
+            </button> */}
           </div>
-          {errors.email && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.email}</p>}
+          {/* {errors.email && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.email}</p>}
           {otpSent && !errors.email && (
             <p className="text-xs text-green-600 mt-1.5">✓ OTP sent! Check your inbox.</p>
-          )}
+          )} */}
         </div>
 
         {/* OTP */}
-        <div className="mb-5">
+        {/* <div className="mb-5">
           <label className="block text-sm text-gray-500 mb-1.5">Enter OTP</label>
           <input
             type="text"
@@ -139,25 +136,68 @@ export default function Signup() {
             className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 tracking-widest text-center ${
               errors.otp ? "border-red-400" : "border-gray-200 focus:border-blue-300"
             }`}
-          />
-          {errors.otp && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.otp}</p>}
-        </div>
+          /> */}
+          {/* {errors.otp && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.otp}</p>}
+        </div> */}
 
         {/* Password */}
-        <div className="mb-6">
+        <div className="mb-6"   style={{
+           position: "relative",
+           width: "300px"
+               }}>
           <label className="block text-sm text-gray-500 mb-1.5">Password</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
-            placeholder="••••••••"
+            placeholder="Enter password"
             value={form.password}
             onChange={handleChange}
+             style={{
+              width: "100%",
+              padding: "10px",
+              paddingRight: "40px"
+                 }}
             className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${
               errors.password ? "border-red-400" : "border-gray-200 focus:border-blue-300"
+            
             }`}
+
+            
           />
+          <span
+    onClick={() => setShowPassword(!showPassword)}
+
+    style={{
+      position: "absolute",
+      right: "10px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      cursor: "pointer"
+    }}
+  >
+
+    {
+      showPassword
+      ?
+      <FaEyeSlash />
+      :
+      <FaEye />
+    }
+
+  </span>
+
+          
+          
           {errors.password && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.password}</p>}
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 focus:outline-none"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
+
 
         {/* Submit */}
         <button
