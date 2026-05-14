@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
 
 
 export default function Signup() {
@@ -10,6 +11,27 @@ export default function Signup() {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const signupUser = async () => {
+
+  try {
+
+    const response = await axios.post(
+      "http://127.0.0.1:8000/signup",
+      {
+        name: form.name,
+        email: form.email,
+        password: form.password
+      }
+    );
+
+    console.log(response.data);
+
+  } catch (error) {
+
+    console.log(error);
+  }
+};
+
 
   const validate = () => {
     const newErrors = {};
@@ -151,7 +173,12 @@ export default function Signup() {
             name="password"
             placeholder="Enter password"
             value={form.password}
-            onChange={handleChange}
+          onChange={(e) =>
+              setForm({
+                   ...form,
+                 password: e.target.value
+                         })
+                   }
              style={{
               width: "100%",
               padding: "10px",
@@ -165,14 +192,14 @@ export default function Signup() {
             
           />
           <span
-    onClick={() => setShowPassword(!showPassword)}
+       onClick={() => setShowPassword(!showPassword)}
 
-    style={{
-      position: "absolute",
-      right: "10px",
-      top: "50%",
-      transform: "translateY(-50%)",
-      cursor: "pointer"
+        style={{
+        position: "absolute",
+        right: "10px",
+        top: "70%",
+        transform: "translateY(-50%)",
+        cursor: "pointer"
     }}
   >
 
@@ -194,14 +221,14 @@ export default function Signup() {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 focus:outline-none"
           >
-            {showPassword ? "Hide" : "Show"}
           </button>
         </div>
 
 
         {/* Submit */}
         <button
-          onClick={handleSubmit}
+        type="button"
+          onClick={signupUser}
           className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
         >
           Create account

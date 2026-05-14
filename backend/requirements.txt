@@ -4,3 +4,4 @@ python_multipart-0.0.28
 bcrypt-5.0.0
 annotated_doc-0.0.4
 h11-0.16.0
+# mongodb+srv://hrresumes_db_user:HR_resumes_A@cluster0.6lahgnr.mongodb.net/hr_resume_analyzer?appName=cluster0
