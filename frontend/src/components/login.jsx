@@ -12,28 +12,55 @@ export default function Login() {
     password: ""
   });
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const loginUser = async () => {
 
-    try {
+  try {
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/login",
-        {
-          email: form.email,
-          password: form.password
-        }
-      );
+    const response = await axios.post(
+      "http://127.0.0.1:8000/login",
+      {
+        email: form.email,
+        password: form.password
+      }
+    );
 
-      console.log(response.data);
+    console.log(response.data);
 
-      alert(response.data.message);
+    if (response.data.success) {
 
-    } catch (error) {
+      setAlertMessage("Login Successful");
 
-      console.log(error);
+      setShowAlert(true);
+
+      setTimeout(() => {
+
+        setShowAlert(false);
+
+        navigate("/sidebar");
+
+      }, 2000);
+
+    } else {
+
+      setAlertMessage(response.data.message);
+
+      setShowAlert(true);
+
+      setTimeout(() => {
+
+        setShowAlert(false);
+
+      }, 2000);
     }
+
+  } catch (error) {
+
+    console.log(error);
+  }
   };
   const validate = () => {
     const newErrors = {};
@@ -104,55 +131,79 @@ export default function Login() {
             <p className="text-xs text-red-500 mt-1.5">⚠ {errors.email}</p>
           )}
         </div>
+        {
+          showAlert && (
+
+            <div
+              style={{
+                position: "fixed",
+                top: "20px",
+                right: "20px",
+                background: "#4CAF50",
+                color: "white",
+                padding: "14px 24px",
+                borderRadius: "10px",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+                zIndex: "1000",
+                fontWeight: "600"
+              }}
+            >
+
+              {alertMessage}
+
+            </div>
+
+          )
+        }
 
         {/* Password */}
         <div className="mb-6 ">
 
           <div className="flex justify-between items-center mb-1.5">
             <label className="text-sm text-gray-500">Password   {/* Eye Icon */}
-          
+
 
             </label>
             <a href="/forgot-password" className="text-sm text-blue-500 hover:underline">
               Forgot password?
             </a>
           </div>
-         
-         <div className="relative">
-          
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"   // ✅ fixed: removed extra space
-            placeholder="••••••••"
-            value={form.password}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                password: e.target.value,
-              })
-              
-            }
-            
-            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.password
-              ? "border-red-400 focus:border-red-400"
-              : "border-gray-200 focus:border-blue-300"
-              }`}
-          />
-          <span
-            onClick={() => setShowPassword(!showPassword)}
-            className=" absolute right-3 top-3 text-gray-500 hover:text-gray-700 cursor-pointer"
-          >
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
-          </span>
-          
 
-         
-         </div>
-            {errors.password && (
+          <div className="relative">
+
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"   // ✅ fixed: removed extra space
+              placeholder="••••••••"
+              value={form.password}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  password: e.target.value,
+                })
+
+              }
+
+              className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.password
+                ? "border-red-400 focus:border-red-400"
+                : "border-gray-200 focus:border-blue-300"
+                }`}
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className=" absolute right-3 top-3 text-gray-500 hover:text-gray-700 cursor-pointer"
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+
+
+
+          </div>
+          {errors.password && (
             <p className="text-xs text-red-500 mt-1.5">⚠ {errors.password}</p>
           )}
-           
-        
+
+
         </div>
 
 
@@ -162,7 +213,7 @@ export default function Login() {
           onClick={loginUser}
           className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
         >
-          Sign in
+          Log in
         </button>
 
         <p className="text-center text-sm text-gray-400 mt-5">

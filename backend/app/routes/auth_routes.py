@@ -26,15 +26,18 @@ async def login(data: dict):
 
     if not user:
         return {
+           "success": False,
             "message": "User not found"
         }
 
     if user["password"] != password:
         return {
+            "success": False,
             "message": "Wrong password"
         }
 
     return {
+        "success": True,
         "message": "Login Successful"
     }
 

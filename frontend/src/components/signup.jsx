@@ -4,6 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 
 
+
 export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", otp: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -11,6 +12,11 @@ export default function Signup() {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+ 
+
+
   const signupUser = async () => {
 
     try {
@@ -25,6 +31,18 @@ export default function Signup() {
       );
 
       console.log(response.data);
+      setAlertMessage("Signup Successful");
+      setShowAlert(true);
+
+      setTimeout(() => {
+
+        setShowAlert(false);
+
+        navigate("/sidebar");
+
+      }, 2000);
+     
+
 
     } catch (error) {
 
@@ -54,6 +72,7 @@ export default function Signup() {
       newErrors.password = "Password must be at least 6 characters.";
     }
 
+    
     return newErrors;
   };
 
@@ -159,12 +178,36 @@ export default function Signup() {
           /> */}
         {/* {errors.otp && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.otp}</p>}
         </div> */}
+ {
+      showAlert && (
 
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            background: "#4CAF50",
+            color: "white",
+            padding: "14px 24px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+            zIndex: "1000",
+            fontWeight: "600"
+          }}
+        >
+
+          {alertMessage}
+
+        </div>
+
+      )
+    }
         {/* Password */}
         <div className="mb-6" style={{
           position: "relative",
           width: "300px"
         }}>
+          
           <label className="block text-sm text-gray-500 mb-1.5">Password</label>
           <input
             type={showPassword ? "text" : "password"}
@@ -235,6 +278,7 @@ export default function Signup() {
           Already have an account?{" "}
           <a href="/login" className="text-blue-500 hover:underline">Sign in</a>
         </p>
+        
 
       </div>
     </div>
