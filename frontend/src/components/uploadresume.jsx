@@ -11,7 +11,9 @@ export default function UploadResume() {
     if (valid.length === 0) return alert("Only PDF or DOC/DOCX files are allowed.");
     setFiles((prev) => [...prev, ...valid]);
   };
+  const formData = new FormData();
 
+  formData.append("file", file);
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
@@ -92,8 +94,8 @@ export default function UploadResume() {
         onClick={handleUpload}
         disabled={files.length === 0}
         className={`w-full py-3 rounded-xl text-sm font-medium transition-colors ${files.length === 0
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-gray-900 text-white hover:bg-gray-700"
+          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+          : "bg-gray-900 text-white hover:bg-gray-700"
           }`}
       >
         Upload {files.length > 0 ? `${files.length} Resume(s)` : "Resumes"}
