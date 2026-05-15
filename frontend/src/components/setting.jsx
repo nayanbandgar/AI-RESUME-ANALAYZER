@@ -29,9 +29,8 @@ export default function Settings() {
         {items.map((item, i) => (
           <div
             key={item.key}
-            className={`flex items-center justify-between px-5 py-4 ${
-              i !== items.length - 1 ? "border-b border-gray-50" : ""
-            }`}
+            className={`flex items-center justify-between px-5 py-4 ${i !== items.length - 1 ? "border-b border-gray-50" : ""
+              }`}
           >
             <div>
               <p className="text-sm font-medium text-gray-800">{item.label}</p>
@@ -39,14 +38,12 @@ export default function Settings() {
             </div>
             <button
               onClick={() => toggle(item.key)}
-              className={`relative w-10 h-5 rounded-full transition-colors shrink-0 ml-4 ${
-                settings[item.key] ? "bg-gray-900" : "bg-gray-200"
-              }`}
+              className={`relative w-10 h-5 rounded-full transition-colors shrink-0 ml-4 ${settings[item.key] ? "bg-gray-900" : "bg-gray-200"
+                }`}
             >
               <span
-                className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                  settings[item.key] ? "translate-x-5" : "translate-x-0"
-                }`}
+                className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${settings[item.key] ? "translate-x-5" : "translate-x-0"
+                  }`}
               />
             </button>
           </div>

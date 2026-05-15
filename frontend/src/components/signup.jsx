@@ -13,24 +13,24 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const signupUser = async () => {
 
-  try {
+    try {
 
-    const response = await axios.post(
-      "http://127.0.0.1:8000/signup",
-      {
-        name: form.name,
-        email: form.email,
-        password: form.password
-      }
-    );
+      const response = await axios.post(
+        "http://127.0.0.1:8000/signup",
+        {
+          name: form.name,
+          email: form.email,
+          password: form.password
+        }
+      );
 
-    console.log(response.data);
+      console.log(response.data);
 
-  } catch (error) {
+    } catch (error) {
 
-    console.log(error);
-  }
-};
+      console.log(error);
+    }
+  };
 
 
   const validate = () => {
@@ -46,7 +46,7 @@ export default function Signup() {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    
+
 
     if (!form.password.trim()) {
       newErrors.password = "Password is required.";
@@ -67,10 +67,10 @@ export default function Signup() {
   //     setErrors({ ...errors, email: "Please enter your email before sending OTP." });
   //     return;
   //   }
-    // if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    //   setErrors({ ...errors, email: "Please enter a valid email address." });
-    //   return;
-    // }
+  // if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+  //   setErrors({ ...errors, email: "Please enter a valid email address." });
+  //   return;
+  // }
   //   // Add your OTP API call here
   //   setOtpSent(true);
   //   setErrors({ ...errors, email: "" });
@@ -111,9 +111,8 @@ export default function Signup() {
             placeholder="XYZ"
             value={form.name}
             onChange={handleChange}
-            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${
-              errors.name ? "border-red-400" : "border-gray-200 focus:border-blue-300"
-            }`}
+            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.name ? "border-red-400" : "border-gray-200 focus:border-blue-300"
+              }`}
           />
           {errors.name && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.name}</p>}
         </div>
@@ -128,9 +127,8 @@ export default function Signup() {
               placeholder="you@example.com"
               value={form.email}
               onChange={handleChange}
-              className={`flex-1 px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${
-                errors.email ? "border-red-400" : "border-gray-200 focus:border-blue-300"
-              }`}
+              className={`flex-1 px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.email ? "border-red-400" : "border-gray-200 focus:border-blue-300"
+                }`}
             />
             {/* <button
               type="button"
@@ -159,62 +157,61 @@ export default function Signup() {
               errors.otp ? "border-red-400" : "border-gray-200 focus:border-blue-300"
             }`}
           /> */}
-          {/* {errors.otp && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.otp}</p>}
+        {/* {errors.otp && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.otp}</p>}
         </div> */}
 
         {/* Password */}
-        <div className="mb-6"   style={{
-           position: "relative",
-           width: "300px"
-               }}>
+        <div className="mb-6" style={{
+          position: "relative",
+          width: "300px"
+        }}>
           <label className="block text-sm text-gray-500 mb-1.5">Password</label>
           <input
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Enter password"
             value={form.password}
-          onChange={(e) =>
+            onChange={(e) =>
               setForm({
-                   ...form,
-                 password: e.target.value
-                         })
-                   }
-             style={{
+                ...form,
+                password: e.target.value
+              })
+            }
+            style={{
               width: "100%",
               padding: "10px",
               paddingRight: "40px"
-                 }}
-            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${
-              errors.password ? "border-red-400" : "border-gray-200 focus:border-blue-300"
-            
-            }`}
+            }}
+            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.password ? "border-red-400" : "border-gray-200 focus:border-blue-300"
 
-            
+              }`}
+
+
           />
           <span
-       onClick={() => setShowPassword(!showPassword)}
+            onClick={() => setShowPassword(!showPassword)}
 
-        style={{
-        position: "absolute",
-        right: "10px",
-        top: "70%",
-        transform: "translateY(-50%)",
-        cursor: "pointer"
-    }}
-  >
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "70%",
+              transform: "translateY(-50%)",
+              cursor: "pointer"
+            }}
+          >
 
-    {
-      showPassword
-      ?
-      <FaEyeSlash />
-      :
-      <FaEye />
-    }
+            {
+              showPassword
+                ?
+                <FaEyeSlash />
+                :
+                <FaEye />
+            }
 
-  </span>
+          </span>
 
-          
-          
+
+
           {errors.password && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.password}</p>}
           <button
             type="button"
@@ -227,7 +224,7 @@ export default function Signup() {
 
         {/* Submit */}
         <button
-        type="button"
+          type="button"
           onClick={signupUser}
           className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
         >
