@@ -12,10 +12,31 @@ from email.mime.text import MIMEText
 load_dotenv()
 
 router = APIRouter()
-
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
+@router.post("/login")
+async def login(data: dict):
 
+    email = data.get("email")
+    password = data.get("password")
+
+    user = db.users.find_one({
+        "email": email
+    })
+
+    if not user:
+        return {
+            "message": "User not found"
+        }
+
+    if user["password"] != password:
+        return {
+            "message": "Wrong password"
+        }
+
+    return {
+        "message": "Login Successful"
+    }
 
 
 
