@@ -1,21 +1,24 @@
 from fastapi import APIRouter
 from app.database import db
-
-from dotenv import load_dotenv
+from fastapi import UploadFile, File
+from email.mime.text import MIMEText
+import dotenv
 import os
 import random
 import smtplib
 import bcrypt
+import shutil
 
-from email.mime.text import MIMEText
 
-load_dotenv()
+dotenv.load_dotenv()
 
 router = APIRouter()
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
 
-
+# ===================================
+# LOGIN
+# ===================================
 @router.post("/login")
 async def login(data: dict):
 
@@ -45,27 +48,23 @@ async def signup(data: dict):
 
     return {"message": "Signup Successful"}
 
-    from fastapi import UploadFile, File
 
-
-import shutil
-
-
-from fastapi import UploadFile, File
-import shutil
-
-
+# ===================================
+# UPLOADRESUMES 
+# ===================================
 @router.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
 
+    print("API CALLED")
+
     file_path = f"uploads/{file.filename}"
 
-    # save file in uploads folder
     with open(file_path, "wb") as buffer:
 
         shutil.copyfileobj(file.file, buffer)
 
-    # save details in MongoDB
+    print("FILE SAVED")
+
     db.resumes.insert_one({
 
         "filename": file.filename,
@@ -74,8 +73,8 @@ async def upload_resume(file: UploadFile = File(...)):
 
     })
 
+    print("DATA INSERTED")
+
     return {
-
         "message": "Resume Uploaded Successfully"
-
     }

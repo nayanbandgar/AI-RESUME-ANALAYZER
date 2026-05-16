@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState } from "react"
+import axios from "axios";
+
 
 export default function UploadResume() {
   const [files, setFiles] = useState([]);
@@ -11,9 +13,7 @@ export default function UploadResume() {
     if (valid.length === 0) return alert("Only PDF or DOC/DOCX files are allowed.");
     setFiles((prev) => [...prev, ...valid]);
   };
-  const formData = new FormData();
 
-  formData.append("file", file);
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
@@ -29,6 +29,32 @@ export default function UploadResume() {
     alert(`${files.length} resume(s) uploaded successfully!`);
     // Add your upload API call here
   };
+const uploadResume = async () => {
+
+  try {
+
+    for (let i = 0; i < files.length; i++) {
+
+      const formData = new FormData();
+
+      formData.append("file", files[i]);
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/upload-resume",
+        formData
+      );
+
+      console.log(response.data);
+    }
+
+    alert("Resume Uploaded Successfully");
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -91,7 +117,7 @@ export default function UploadResume() {
       )}
 
       <button
-        onClick={handleUpload}
+        onClick={uploadResume}
         disabled={files.length === 0}
         className={`w-full py-3 rounded-xl text-sm font-medium transition-colors ${files.length === 0
           ? "bg-gray-100 text-gray-400 cursor-not-allowed"
