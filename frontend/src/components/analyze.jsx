@@ -19,7 +19,7 @@ export default function Analyze() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto bg-black">
 
       {/* Header */}
       <div className="mb-6">
