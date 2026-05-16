@@ -7,7 +7,7 @@ export default function Analyze() {
   const [analyzing, setAnalyzing] = useState(false);
   const [done, setDone] = useState(false);
 
-  const handleAnalyze = () => {
+  const analyzeResume = () => {
     if (!jobDescription.trim()) return;
     setAnalyzing(true);
     setDone(false);
@@ -105,7 +105,7 @@ export default function Analyze() {
 
       {/* Analyze Button */}
       <button
-        onClick={handleAnalyze}
+        onClick={analyzeResume}
         disabled={analyzing || !jobDescription.trim()}
         className={`w-full py-3 rounded-xl text-sm font-medium transition-colors ${analyzing || !jobDescription.trim()
             ? "bg-gray-100 text-gray-400 cursor-not-allowed"

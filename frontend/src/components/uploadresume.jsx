@@ -1,10 +1,12 @@
 import { useState } from "react"
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 export default function UploadResume() {
   const [files, setFiles] = useState([]);
   const [dragging, setDragging] = useState(false);
+  const navigate = useNavigate();
 
   const handleFiles = (incoming) => {
     const valid = Array.from(incoming).filter(
@@ -55,7 +57,7 @@ const uploadResume = async () => {
 
   }
 };
-
+  navigate("/analyze")
   return (
     <div className="max-w-2xl mx-auto">
 

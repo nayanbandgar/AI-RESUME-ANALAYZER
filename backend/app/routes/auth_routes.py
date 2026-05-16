@@ -8,6 +8,7 @@ import random
 import smtplib
 import bcrypt
 import shutil
+from app.resume_parser import extract_text
 
 
 dotenv.load_dotenv()
@@ -74,6 +75,32 @@ async def upload_resume(file: UploadFile = File(...)):
     })
 
     print("DATA INSERTED")
+
+    return {
+        "message": "Resume Uploaded Successfully"
+    }
+@router.post("/upload-resume")
+async def upload_resume(file: UploadFile = File(...)):
+
+    file_path = f"uploads/{file.filename}"
+
+    with open(file_path, "wb") as buffer:
+
+        shutil.copyfileobj(file.file, buffer)
+
+    # extract resume text
+    extracted_text = extract_text(file_path)
+
+    # save in MongoDB
+    db.resumes.insert_one({
+
+        "filename": file.filename,
+
+        "path": file_path,
+
+        "resume_text": extracted_text
+
+    })
 
     return {
         "message": "Resume Uploaded Successfully"
