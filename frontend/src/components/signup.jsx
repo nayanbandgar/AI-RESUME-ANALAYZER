@@ -109,28 +109,28 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#dae2f8] to-[#d6a4a4] flex items-center justify-center px-4">
-      <div className="bg-white border border-gray-200 rounded-2xl p-10 w-full max-w-md">
+    <div className="min-h-screen bg-linear-to-r from-red-950  to-black  flex items-center justify-center px-4">
+      <div className="bg-black-100  border-white border-4 rounded-2xl p-10 w-full max-w-md">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-11 h-11 rounded-full bg-blue-50 text-blue-600 font-medium text-sm flex items-center justify-center mx-auto mb-3">
+          <div className="w-16 h-16 rounded-full bg-white border-red-900 border-2 text-red-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
             AR
           </div>
-          <h2 className="text-xl font-medium text-gray-900">Create an account</h2>
-          <p className="text-sm text-gray-500 mt-1">Sign up to get started</p>
+          <h2 className="text-xl font-medium text-white">Create an account</h2>
+          <p className="text-sm text-gray-400 mt-1">Sign up to get started</p>
         </div>
 
         {/* Name */}
         <div className="mb-5">
-          <label className="block text-sm text-gray-500 mb-1.5">Full name</label>
+          <label className="block text-sm text-gray-200 mb-1.5">Full name</label>
           <input
             type="text"
             name="name"
             placeholder="XYZ"
             value={form.name}
             onChange={handleChange}
-            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.name ? "border-red-400" : "border-gray-200 focus:border-blue-300"
+            className={`w-full px-3 py-2.5 border placeholder:text-gray-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.name ? "border-red-400" : "border-gray-200 focus:border-blue-300"
               }`}
           />
           {errors.name && <p className="text-xs text-red-500 mt-1.5">⚠ {errors.name}</p>}
@@ -138,7 +138,7 @@ export default function Signup() {
 
         {/* Email + OTP Butto */}
         <div className="mb-5">
-          <label className="block text-sm text-gray-500 mb-1.5">Email address</label>
+          <label className="block text-sm text-gray-200 mb-1.5">Email address</label>
           <div className="flex gap-2">
             <input
               type="email"
@@ -146,7 +146,7 @@ export default function Signup() {
               placeholder="you@example.com"
               value={form.email}
               onChange={handleChange}
-              className={`flex-1 px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.email ? "border-red-400" : "border-gray-200 focus:border-blue-300"
+              className={`flex-1 px-3 py-2.5 border placeholder:text-gray-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.email ? "border-red-400" : "border-gray-200 focus:border-blue-300"
                 }`}
             />
             {/* <button
@@ -208,11 +208,12 @@ export default function Signup() {
           width: "300px"
         }}>
           
-          <label className="block text-sm text-gray-500 mb-1.5">Password</label>
+          <label className="block text-sm text-gray-200 mb-1.5">Password</label>
           <input
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Enter password"
+            
             value={form.password}
             onChange={(e) =>
               setForm({
@@ -224,8 +225,9 @@ export default function Signup() {
               width: "100%",
               padding: "10px",
               paddingRight: "40px"
+  
             }}
-            className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.password ? "border-red-400" : "border-gray-200 focus:border-blue-300"
+            className={`w-full px-3 py-2.5 border placeholder:text-gray-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.password ? "border-red-400" : "border-gray-200 focus:border-blue-300"
 
               }`}
 
@@ -239,16 +241,18 @@ export default function Signup() {
               right: "10px",
               top: "70%",
               transform: "translateY(-50%)",
-              cursor: "pointer"
+              cursor: "pointer",
+              color: "gray"
             }}
           >
 
             {
               showPassword
                 ?
-                <FaEyeSlash />
+                <FaEyeSlash   className="text-white hover:text-white focus:outline-none"/>
                 :
                 <FaEye />
+               
             }
 
           </span>
@@ -269,7 +273,7 @@ export default function Signup() {
         <button
           type="button"
           onClick={signupUser}
-          className="w-full py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
+          className="w-full py-2.5 bg-white text-black text-sm font-medium rounded-lg hover:bg-red-950 hover:text-white transition-colors cursor-pointer"
         >
           Create account
         </button>
