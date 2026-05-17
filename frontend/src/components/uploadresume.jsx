@@ -59,11 +59,11 @@ const uploadResume = async () => {
 };
   navigate("/analyze")
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="h-auto w-full bg-black mx-auto">
 
       <div className="mb-6">
-        <h1 className="text-xl font-medium text-gray-900">Upload Resumes</h1>
-        <p className="text-sm text-gray-400 mt-1">Upload PDF or DOC files to analyze.</p>
+        <h1 className="text-xl font-medium text-center text-gray-100">Upload Resumes</h1>
+        <p className="text-sm text-gray-400  text-center mt-1">Upload PDF or DOC files to analyze.</p>
       </div>
 
       {/* Drop Zone */}
@@ -71,7 +71,7 @@ const uploadResume = async () => {
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-xl p-10 text-center transition-colors mb-5 ${dragging ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-white"
+        className={`border-2 border-dashed rounded-xl  w-3xl p-14 text-center transition-colors mb-5 ${dragging ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-white"
           }`}
       >
         <svg className="mx-auto mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round">

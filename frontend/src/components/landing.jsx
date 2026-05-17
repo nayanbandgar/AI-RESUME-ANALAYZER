@@ -22,7 +22,7 @@ export default function Landing() {
         <div className="flex flex-col gap-3">
           <button
             onClick={() => navigate("/login")}
-            className="w-full py-2.5 bg-white text-gray-900 text-l font-medium rounded-lg  border border-gray-200 hover:border-whitehover:text-white transition-colors hover:scale-105 duration-200  cursor-pointer"
+            className="w-full py-2.5 bg-white text-gray-900 text-l font-medium rounded-lg  border border-gray-200 hover:border-white hover:bg-red-950 hover:text-white transition-colors hover:scale-105 duration-200  cursor-pointer"
           >
             Login
           </button>
