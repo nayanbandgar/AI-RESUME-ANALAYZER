@@ -59,7 +59,7 @@ const uploadResume = async () => {
 };
   navigate("/analyze")
   return (
-    <div className="h-auto w-full bg-black mx-auto">
+    <div className="h-auto w-full  mx-auto">
 
       <div className="mb-6">
         <h1 className="text-xl font-medium text-center text-gray-100">Upload Resumes</h1>

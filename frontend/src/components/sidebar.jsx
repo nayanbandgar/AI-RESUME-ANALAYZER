@@ -102,16 +102,16 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-56 h-screen bg-red-950  border-r border-gray-100 flex flex-col">
+    <div className="w-64 h-screen bg-gradient-to-b from-red-950 to-gray-900 border-r border-gray-100 flex flex-col">
 
       {/* Logo */}
       <div className="px-4 py-5 border-b border-gray-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 text-xs font-medium flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-white border-red-900 border-2 text-red-950 text-sm font-medium flex items-center justify-center">
             HR
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-900">AI Resume</p>
+            <p className="text-lg font-medium text-gray-100">AI Resume</p>
             <p className="text-xs text-gray-400">Analyzer</p>
           </div>
         </div>
@@ -135,8 +135,8 @@ export default function Sidebar() {
                   key={item.id}
                   onClick={() => navigate(item.path)}
                   className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${isActive
-                      ? "bg-blue-50 text-blue-600 font-medium"
-                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                      ? "bg-blue-50 text-gray-300 font-medium"
+                      : "text-gray-100 hover:bg-gray-50 hover:text-gray-950"
                     }`}
                 >
                   <span className={isActive ? "text-blue-600" : "text-gray-400"}>
@@ -162,7 +162,7 @@ export default function Sidebar() {
             KH
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-gray-900 truncate">Khushi</p>
+            <p className="text-xs font-medium text-gray-100 truncate">Khushi</p>
             <p className="text-[11px] text-gray-400">Admin</p>
           </div>
           <button onClick={handleLogout} title="Logout">
