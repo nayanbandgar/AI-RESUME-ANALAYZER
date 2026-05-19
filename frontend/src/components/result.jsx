@@ -64,7 +64,7 @@ function ScoreGauge({ score }) {
   const color = scoreColor(score);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className=" flex flex-col items-center">
       <svg width="130" height="75" viewBox="0 0 130 75">
         <path
           d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
@@ -94,7 +94,7 @@ export default function Results() {
     filter === "all" ? mockResults : mockResults.filter((r) => r.status === filter);
 
   return (
-    <div className="flex gap-4 max-w-5xl mx-auto relative">
+    <div className="flex gap-4 max-w-5xl bg-black mx-auto relative">
 
       {/* Results List */}
       <div className={`flex flex-col gap-3 transition-all duration-300 ${selected ? "w-[45%]" : "w-full"}`}>

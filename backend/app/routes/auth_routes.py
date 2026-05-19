@@ -2,10 +2,11 @@ from fastapi import APIRouter
 from app.database import db
 from fastapi import UploadFile, File ,HTTPException
 from typing import List
-from app.resume_parser import parse_resume
+from app.resume_parser import extract_text
 from datetime import datetime
 import uuid
 from email.mime.text import MIMEText
+from fastapi import Body
 import dotenv
 import os
 import random
@@ -163,3 +164,53 @@ async def upload_resumes(files: List[UploadFile] = File(...)):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+#===================================
+# analyeze resumes 
+# ===================================
+@router.post("/analyze")
+async def analyze_resumes(data: dict = Body(...)):
+
+    job_description = data.get("job_description", "")
+
+    resumes = list(db.resumes.find())
+
+    results = []
+
+    jd_words = set(job_description.lower().split())
+
+    for resume in resumes:
+
+        resume_text = resume.get("resume_text", "")
+
+        resume_words = set(resume_text.lower().split())
+
+        matched_words = jd_words.intersection(resume_words)
+
+        if len(jd_words) > 0:
+
+            match_percentage = (
+                len(matched_words) / len(jd_words)
+            ) * 100
+
+        else:
+
+            match_percentage = 0
+
+        results.append({
+
+            "filename": resume.get("filename"),
+
+            "match_percentage": round(match_percentage, 2),
+
+            "matched_keywords": list(matched_words)
+
+        })
+
+    results.sort(
+        key=lambda x: x["match_percentage"],
+        reverse=True
+    )
+
+    return {
+        "results": results
+    }

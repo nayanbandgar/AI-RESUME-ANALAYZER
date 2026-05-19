@@ -17,21 +17,55 @@ export default function Analyze() {
       setDone(true);
     }, 2500);
   };
+  const runAnalysis = async () => {
+
+    try {
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/analyze",
+        {
+          job_description: jobDescription
+        }
+      );
+
+      navigate("/results", {
+        state: {
+          results: response.data.results
+        }
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto bg-black">
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-xl font-medium text-gray-900">Analyze Resumes</h1>
+        <h1 className="text-xl font-medium text-gray-400">Analyze Resumes</h1>
         <p className="text-sm text-gray-400 mt-1">
           Enter job details and let AI match the best candidates.
         </p>
       </div>
+      {/*role for job*/}
+      <div>
+        <label className="block text-lg font-medium text-gray-400  ">
+          Role
+        </label>
+        <input
+          type="text"
+          placeholder="e.g. Frontend Developer, Data Scientist, Product Manager"
+          className="w-full px-3  py-2.5 mb-7 mt-2 border border-gray-200 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
+        />
+      </div>
 
       {/* Job Description */}
-      <div className="bg-white border border-gray-100 rounded-xl p-5 mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className="  rounded-xl  mb-4">
+        <label className="block text-lg font-medium text-gray-400 mb-2">
           Job Description
         </label>
         <textarea
@@ -39,25 +73,25 @@ export default function Analyze() {
           placeholder="Paste the job description here... e.g. We are looking for a React developer with 2+ years experience..."
           value={jobDescription}
           onChange={(e) => setJobDescription(e.target.value)}
-          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 resize-none"
+          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 resize-none"
         />
         {!jobDescription.trim() && (
-          <p className="text-xs text-red-400 mt-1.5">⚠ Job description is required to analyze.</p>
+          <p className="text-xs text-red-200 mt-1.5">⚠ Job description is required to analyze.</p>
         )}
       </div>
 
       {/* Required Skills */}
-      <div className="bg-white border border-gray-100 rounded-xl p-5 mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className=" border  rounded-xl  mb-4">
+        <label className="block text-sm font-medium text-gray-400 mb-2">
           Required Skills
-          <span className="text-gray-400 font-normal ml-1">(comma separated)</span>
+          <span className="text-gray-500 font-normal ml-1">(comma separated)</span>
         </label>
         <input
           type="text"
           placeholder="e.g. React, Node.js, MongoDB, Tailwind CSS"
           value={skills}
           onChange={(e) => setSkills(e.target.value)}
-          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
+          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 placeholder:text-gray-400"
         />
 
         {/* Skill Tags Preview */}
@@ -67,7 +101,7 @@ export default function Analyze() {
               s.trim() ? (
                 <span
                   key={i}
-                  className="bg-blue-50 text-blue-600 text-xs font-medium px-2.5 py-1 rounded-full"
+                  className="bg-blue-50 text-red-950 text-xs font-medium px-2.5 py-1 rounded-full"
                 >
                   {s.trim()}
                 </span>
@@ -78,8 +112,8 @@ export default function Analyze() {
       </div>
 
       {/* Experience Level */}
-      <div className="bg-white border border-gray-100 rounded-xl p-5 mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+      <div className="  rounded-xl  mb-6">
+        <label className="block text-sm font-medium text-gray-400 mb-3">
           Experience Level
         </label>
         <div className="grid grid-cols-4 gap-2">
@@ -93,8 +127,8 @@ export default function Analyze() {
               key={opt.value}
               onClick={() => setExperience(opt.value)}
               className={`py-2 rounded-lg text-sm font-medium border transition-colors ${experience === opt.value
-                  ? "bg-blue-50 text-blue-600 border-blue-200"
-                  : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
+                ? "bg-blue-50 text-red-950 border-blue-200"
+                : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
                 }`}
             >
               {opt.label}
@@ -104,28 +138,31 @@ export default function Analyze() {
       </div>
 
       {/* Analyze Button */}
-      <button
-        onClick={analyzeResume}
-        disabled={analyzing || !jobDescription.trim()}
-        className={`w-full py-3 rounded-xl text-sm font-medium transition-colors ${analyzing || !jobDescription.trim()
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-gray-900 text-white hover:bg-gray-700"
-          }`}
-      >
-        {analyzing ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeOpacity="0.3" />
-              <path d="M21 12a9 9 0 00-9-9" />
-            </svg>
-            Analyzing resumes...
-          </span>
-        ) : (
-          "Run Analysis"
-        )}
-      </button>
+      <div className="flex justify-center items-center">
+        <button
+          onClick={analyzeResume}
+          disabled={analyzing || !jobDescription.trim()}
+          className={`w-64 py-3 rounded-xl text-sm font-medium transition-colors justify-center flex items-center ${analyzing || !jobDescription.trim()
+            ? "bg-white text-black cursor-pointer"
+            : "bg-gray-900 text-white hover:bg-red-950"
+            }`}
+        >
+          {analyzing ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeOpacity="0.3" />
+                <path d="M21 12a9 9 0 00-9-9" />
+              </svg>
+              Analyzing resumes...
+            </span>
+          ) : (
+            "Run Analysis"
+          )}
+        </button>
+      </div>
 
-      {/* Success Message */}
+
+      {/* Success Message
       {done && (
         <div className="mt-4 bg-green-50 border border-green-100 rounded-xl p-4 flex items-center gap-3">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round">
@@ -140,7 +177,7 @@ export default function Analyze() {
             </p>
           </div>
         </div>
-      )}
+      )} */}
 
     </div>
   );
