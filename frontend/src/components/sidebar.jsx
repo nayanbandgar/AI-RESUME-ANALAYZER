@@ -136,10 +136,10 @@ export default function Sidebar() {
                   onClick={() => navigate(item.path)}
                   className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${isActive
                       ? "bg-blue-50 text-gray-300 font-medium"
-                      : "text-gray-100 hover:bg-gray-50 hover:text-gray-950"
+                      : "text-gray-100 hover:bg-gray-50 hover:text-gray-950 "
                     }`}
                 >
-                  <span className={isActive ? "text-blue-600" : "text-gray-400"}>
+                  <span className={isActive ? "text-blue-600" : "text-gray-400 "}>
                     {item.icon}
                   </span>
                   <span className="flex-1 text-left">{item.label}</span>
