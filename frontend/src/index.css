@@ -1,2 +1,19 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset browser default margin/padding and set background */
+html, body {
+  @apply h-full m-0 p-0 bg-black;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+}
+
+
+
