@@ -168,49 +168,130 @@ async def upload_resumes(files: List[UploadFile] = File(...)):
 # analyeze resumes 
 # ===================================
 @router.post("/analyze")
-async def analyze_resumes(data: dict = Body(...)):
+async def analyze(data:dict):
 
-    job_description = data.get("job_description", "")
+    jd = data["job_description"]
 
-    resumes = list(db.resumes.find())
+    jd_words = set(
+        jd.lower().split()
+    )
+
+    resumes = list(
+        db.resumes.find()
+    )
 
     results = []
 
-    jd_words = set(job_description.lower().split())
-
     for resume in resumes:
 
-        resume_text = resume.get("resume_text", "")
+        resume_words = set(
 
-        resume_words = set(resume_text.lower().split())
+            resume["resume_text"]
+            .lower()
+            .split()
 
-        matched_words = jd_words.intersection(resume_words)
+        )
 
-        if len(jd_words) > 0:
+        matched = jd_words.intersection(
+            resume_words
+        )
 
-            match_percentage = (
-                len(matched_words) / len(jd_words)
-            ) * 100
+        score = (
 
-        else:
+            len(matched)
+            /
+            len(jd_words)
 
-            match_percentage = 0
+        ) * 100
 
         results.append({
 
-            "filename": resume.get("filename"),
+            "filename":
+            resume["filename"],
 
-            "match_percentage": round(match_percentage, 2),
+            "score":
+            round(score,2),
 
-            "matched_keywords": list(matched_words)
+            "matched":
+            list(matched)
 
         })
 
     results.sort(
-        key=lambda x: x["match_percentage"],
+
+        key=lambda x:x["score"],
+
         reverse=True
+
     )
 
     return {
-        "results": results
+
+        "results":results
+
+    }
+@router.post("/save-job")
+
+async def save_job(data:dict):
+
+    db.jobs.insert_one({
+
+        "job_title":
+        data["job_title"],
+
+        "job_description":
+        data["job_description"],
+
+        "required_skills":
+        data["required_skills"],
+
+        "experience":
+        data["experience"]
+
+    })
+
+    return {
+
+      "message":
+      "Stored"
+
+    }
+@router.get("/get-roles")
+
+async def get_roles():
+
+    jobs = list(
+
+        db.jobs.find(
+
+            {},
+
+            {
+
+              "_id":0,
+
+              "job_title":1
+
+            }
+
+        )
+
+    )
+
+    roles = [
+
+      job["job_title"]
+
+      for job in jobs
+
+      if "job_title" in job
+
+    ]
+
+    return {
+
+      "roles":
+
+      list(set(roles))
+
     }

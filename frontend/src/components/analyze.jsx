@@ -1,4 +1,7 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Analyze() {
   const [jobDescription, setJobDescription] = useState("");
@@ -6,6 +9,75 @@ export default function Analyze() {
   const [experience, setExperience] = useState("any");
   const [analyzing, setAnalyzing] = useState(false);
   const [done, setDone] = useState(false);
+  const [role, setRole] = useState("");
+  const [roles, setRoles] = useState([]);
+  const navigate = useNavigate();
+  const [suggestions, setSuggestions] = useState([]);
+
+
+  useEffect(() => {
+
+    fetchRoles();
+
+  }, []);
+
+  const fetchRoles = async () => {
+
+    try {
+
+      const response =
+
+        await axios.get(
+
+          "http://127.0.0.1:8000/get-roles"
+
+        );
+
+      setRoles(
+
+        response.data.roles
+
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+    }
+
+  }
+  const handleRoleChange = (e) => {
+
+    const value = e.target.value;
+
+    setRole(value);
+
+    if (value === "") {
+
+      setSuggestions([]);
+
+      return;
+
+    }
+
+    const filtered = roles.filter(
+
+      (r) =>
+
+        r.toLowerCase().includes(
+
+          value.toLowerCase()
+
+        )
+
+    );
+
+    setSuggestions(filtered);
+
+  };
+
 
   const analyzeResume = () => {
     if (!jobDescription.trim()) return;
@@ -17,29 +89,83 @@ export default function Analyze() {
       setDone(true);
     }, 2500);
   };
+
   const runAnalysis = async () => {
 
+    if (!jobDescription.trim()) {
+
+      alert("Enter Job Description");
+
+      return;
+
+    }
+    
     try {
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/analyze",
+      setAnalyzing(true);
+
+      await axios.post(
+
+        "http://127.0.0.1:8000/save-job",
+
         {
-          job_description: jobDescription
+
+          job_title: role,
+
+          job_description: jobDescription,
+
+          required_skills: skills,
+
+          experience: experience
+
         }
+
       );
 
-      navigate("/results", {
-        state: {
-          results: response.data.results
-        }
-      });
+      const response =
+        await axios.post(
 
-    } catch (error) {
+          "http://127.0.0.1:8000/analyze",
+
+          {
+            job_description: jobDescription
+          }
+        );
+
+      setAnalyzing(false);
+
+      navigate(
+
+        "/results",
+
+        {
+
+          state: {
+
+            results:
+              response.data.results
+
+          }
+
+        }
+
+      );
+
+    }
+
+    catch (error) {
+
+      setAnalyzing(false);
 
       console.log(error);
 
+      alert("Failed");
+
+
     }
   };
+
+
 
   return (
     <div className="max-w-2xl mx-auto bg-black">
@@ -52,15 +178,39 @@ export default function Analyze() {
         </p>
       </div>
       {/*role for job*/}
-      <div>
-        <label className="block text-lg font-medium text-gray-400  ">
+      <div className="relative">
+        <label className="block text-lg font-medium text-gray-400">
           Role
         </label>
         <input
           type="text"
-          placeholder="e.g. Frontend Developer, Data Scientist, Product Manager"
-          className="w-full px-3  py-2.5 mb-7 mt-2 border border-gray-200 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300"
+          value={role}
+          onChange={handleRoleChange}
+          placeholder="Frontend Developer"
+          className="w-full px-3 py-2.5 mt-2 border border-gray-200 rounded-lg text-white"
         />
+        {
+          suggestions.length > 0 && (
+            <div className="absolute w-full bg-white border rounded-lg mt-1 shadow-lg z-10">
+              {
+                suggestions.map(
+                  (item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setRole(item);
+                        setSuggestions([]);
+                      }}
+                      className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {item}
+                    </div>
+                  )
+                )}
+            </div>
+          )
+        }
+
       </div>
 
       {/* Job Description */}
@@ -140,10 +290,10 @@ export default function Analyze() {
       {/* Analyze Button */}
       <div className="flex justify-center items-center">
         <button
-          onClick={analyzeResume}
+          onClick={runAnalysis}
           disabled={analyzing || !jobDescription.trim()}
           className={`w-64 py-3 rounded-xl text-sm font-medium transition-colors justify-center flex items-center ${analyzing || !jobDescription.trim()
-            ? "bg-white text-black cursor-pointer"
+            ? "bg-white text-black cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2"
             : "bg-gray-900 text-white hover:bg-red-950"
             }`}
         >

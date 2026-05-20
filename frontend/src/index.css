@@ -6,7 +6,7 @@
 
 /* Reset browser default margin/padding and set background */
 html, body {
-  @apply h-full m-0 p-0 bg-black;
+  @apply h-full m-0 p-0 bg-linear-to-r from-black  to-red-950;
 }
 body {
   display: flex;
