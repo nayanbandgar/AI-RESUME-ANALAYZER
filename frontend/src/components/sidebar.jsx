@@ -102,17 +102,17 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-screen bg-gradient-to-b from-red-950 to-gray-900 border-r border-gray-100 flex flex-col">
+    <div className="w-64 h-screen bg-linear-to-b from-blue-100 via-blue-900   to-blue-950 border-r border-gray-100 flex flex-col">
 
       {/* Logo */}
       <div className="px-4 py-5 border-b border-gray-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-full bg-white border-red-900 border-2 text-red-950 text-sm font-medium flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-white border-blue-900 border-2 text-blue-950 text-sm font-medium flex items-center justify-center">
             HR
           </div>
           <div>
-            <p className="text-lg font-medium text-gray-100">AI Resume</p>
-            <p className="text-xs text-gray-400">Analyzer</p>
+            <p className="text-lg font-medium text-blue-950">AI Resume</p>
+            <p className="text-xs text-blue-800">Analyzer</p>
           </div>
         </div>
       </div>
@@ -123,13 +123,14 @@ export default function Sidebar() {
           <div key={group.section} className="mb-2">
 
             {/* Section label */}
-            <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest px-2 mb-1">
+            <p className="text-[11px] font-medium text-black uppercase tracking-widest px-2 mb-1">
               {group.section}
             </p>
 
             {/* Items */}
             {group.items.map((item) => {
-              const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path;
+
               return (
                 <button
                   key={item.id}

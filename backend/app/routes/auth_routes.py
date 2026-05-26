@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from app.database import db
-from fastapi import UploadFile, File ,HTTPException
+from fastapi import UploadFile, File, HTTPException
 from typing import List
-from app.resume_parser import extract_text
+from app.resume_parser import extract_text,parse_resume
 from datetime import datetime
 import uuid
 from email.mime.text import MIMEText
 from fastapi import Body
+from app.utils.matcher import calculate_score
+
 import dotenv
 import os
 import random
@@ -24,6 +26,7 @@ dotenv.load_dotenv()
 router = APIRouter()
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
+
 
 # ===================================
 # LOGIN
@@ -59,7 +62,7 @@ async def signup(data: dict):
 
 
 # ===================================
-# UPLOADRESUMES 
+# UPLOADRESUMES
 # ===================================
 @router.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
@@ -69,229 +72,107 @@ async def upload_resume(file: UploadFile = File(...)):
     file_path = f"uploads/{file.filename}"
 
     with open(file_path, "wb") as buffer:
-
         shutil.copyfileobj(file.file, buffer)
 
     print("FILE SAVED")
 
+    extracted_text = extract_text(
+        file_path,
+        
+    )
+
+    parsed_data = parse_resume(
+        file_path,
+        file.filename
+    )
+
     db.resumes.insert_one({
-
         "filename": file.filename,
+        "path": file_path,
+        "resume_text": extracted_text,
 
-        "path": file_path
+        "candidate_name":
+        parsed_data.get(
+            "name",
+            "Unknown"
+        ),
 
+        "candidate_email":
+        parsed_data.get(
+            "email",
+            ""
+        ),
+
+        "skills":
+        parsed_data.get(
+            "skills",
+            []
+        )
     })
 
     print("DATA INSERTED")
 
     return {
-        "message": "Resume Uploaded Successfully"
+        "message":
+        "Resume Uploaded Successfully"
     }
-@router.post("/upload-resumes")
-async def upload_resumes(files: List[UploadFile] = File(...)):
-    """
-    Upload multiple resumes at once
-    
-    - Accepts multiple PDF, DOC, DOCX files
-    - Extracts text from each
-    - Saves all to MongoDB
-    - Returns list of resume IDs
-    """
-    uploaded = []
-    resume_ids = []
-    
-    try:
-        for file in files:
-            try:
-                # Validate file extension
-                file_ext = file.filename.split(".")[-1].lower()
-                if file_ext not in ["pdf", "doc", "docx"]:
-                    continue
-                
-                # Generate unique filename
-                unique_filename = f"{uuid.uuid4().hex}.{file_ext}"
-                file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
-                
-                # Save file
-                with open(file_path, "wb") as buffer:
-                    shutil.copyfileobj(file.file, buffer)
-                
-                # Extract text
-                extracted_text = extract_text(file_path, file.filename)
-                
-                if not extracted_text:
-                    os.remove(file_path)
-                    continue
-                
-                # Parse resume
-                parsed_data = parse_resume(file_path, file.filename)
-                
-                # Save to MongoDB
-                resume_doc = {
-                    "filename": file.filename,
-                    "stored_filename": unique_filename,
-                    "path": file_path,
-                    "resume_text": extracted_text,
-                    "candidate_email": parsed_data.get("email", ""),
-                    "candidate_name": parsed_data.get("name", "Unknown"),
-                    "skills": parsed_data.get("skills", []),
-                    "experience_years": parsed_data.get("experience_years", 0),
-                    "education": parsed_data.get("education", []),
-                    "parsed_data": parsed_data,
-                    "uploaded_at": datetime.utcnow()
-                }
-                
-                result = db.resumes.insert_one(resume_doc)
-                
-                uploaded.append({
-                    "resume_id": str(result.inserted_id),
-                    "filename": file.filename,
-                    "name": parsed_data.get("name", "Unknown"),
-                    "email": parsed_data.get("email", "")
-                })
-                resume_ids.append(str(result.inserted_id))
-                
-            except Exception as e:
-                print(f"Error uploading {file.filename}: {e}")
-                continue
-        
-        return {
-            "message": f"{len(uploaded)} resumes uploaded successfully",
-            "uploaded": uploaded,
-            "resume_ids": resume_ids,
-            "count": len(uploaded)
-        }
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-#===================================
-# analyeze resumes 
+
+
+# ===================================
+# analyeze resumes
 # ===================================
 @router.post("/analyze")
-async def analyze(data:dict):
+async def analyze(data: dict):
 
     jd = data["job_description"]
 
-    jd_words = set(
-        jd.lower().split()
-    )
+    jd_words = set(jd.lower().split())
 
-    resumes = list(
-        db.resumes.find()
-    )
+    resumes = list(db.resumes.find())
 
     results = []
 
     for resume in resumes:
 
-        resume_words = set(
+        resume_words = set(resume["resume_text"].lower().split())
 
-            resume["resume_text"]
-            .lower()
-            .split()
+        matched = jd_words.intersection(resume_words)
 
+        score = (len(matched) / len(jd_words)) * 100
+
+        results.append(
+            {
+                "filename": resume["filename"],
+                "score": round(score, 2),
+                "matched": list(matched),
+            }
         )
 
-        matched = jd_words.intersection(
-            resume_words
-        )
+    results.sort(key=lambda x: x["score"], reverse=True)
 
-        score = (
+    return {"results": results}
 
-            len(matched)
-            /
-            len(jd_words)
 
-        ) * 100
+@router.post("/save-job")
+async def save_job(data: dict):
 
-        results.append({
-
-            "filename":
-            resume["filename"],
-
-            "score":
-            round(score,2),
-
-            "matched":
-            list(matched)
-
-        })
-
-    results.sort(
-
-        key=lambda x:x["score"],
-
-        reverse=True
-
+    db.jobs.insert_one(
+        {
+            "job_title": data["job_title"],
+            "job_description": data["job_description"],
+            "required_skills": data["required_skills"],
+            "experience": data["experience"],
+        }
     )
 
-    return {
+    return {"message": "Stored"}
 
-        "results":results
 
-    }
-@router.post("/save-job")
-
-async def save_job(data:dict):
-
-    db.jobs.insert_one({
-
-        "job_title":
-        data["job_title"],
-
-        "job_description":
-        data["job_description"],
-
-        "required_skills":
-        data["required_skills"],
-
-        "experience":
-        data["experience"]
-
-    })
-
-    return {
-
-      "message":
-      "Stored"
-
-    }
 @router.get("/get-roles")
-
 async def get_roles():
 
-    jobs = list(
+    jobs = list(db.jobs.find({}, {"_id": 0, "job_title": 1}))
 
-        db.jobs.find(
+    roles = [job["job_title"] for job in jobs if "job_title" in job]
 
-            {},
-
-            {
-
-              "_id":0,
-
-              "job_title":1
-
-            }
-
-        )
-
-    )
-
-    roles = [
-
-      job["job_title"]
-
-      for job in jobs
-
-      if "job_title" in job
-
-    ]
-
-    return {
-
-      "roles":
-
-      list(set(roles))
-
-    }
+    return {"roles": list(set(roles))}

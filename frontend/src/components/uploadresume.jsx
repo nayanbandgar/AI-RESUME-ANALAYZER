@@ -72,7 +72,7 @@ export default function UploadResume() {
 
   return (
 
-    <div className="   h-full  bg-black flex flex-col items-center justify-center  ">
+    <div className="   h-full  flex flex-col items-center justify-center  ">
       {/* Header */}
       <div className="pb-14">
         <h1 className="text-2xl font-medium text-center text-gray-100">Upload Resumes</h1>

@@ -29,7 +29,7 @@ export default function HrProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen  flex items-center justify-center px-4 py-10">
       <div className="bg-white border border-gray-200 rounded-2xl p-10 w-full max-w-2xl">
 
         {/* Header */}

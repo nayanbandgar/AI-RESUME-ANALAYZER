@@ -155,20 +155,24 @@ export default function Analyze() {
 
     catch (error) {
 
-      setAnalyzing(false);
+  setAnalyzing(false);
 
-      console.log(error);
+  console.log(error);
 
-      alert("Failed");
+  console.log(error.response);
 
+  alert(
+    error.response?.data?.detail ||
+    error.message
+  );
 
-    }
+}
   };
 
 
 
   return (
-    <div className="max-w-2xl mx-auto bg-black">
+    <div className="max-w-2xl mx-auto">
 
       {/* Header */}
       <div className="mb-6">
@@ -292,9 +296,8 @@ export default function Analyze() {
         <button
           onClick={runAnalysis}
           disabled={analyzing || !jobDescription.trim()}
-          className={`w-64 py-3 rounded-xl text-sm font-medium transition-colors justify-center flex items-center ${analyzing || !jobDescription.trim()
-            ? "bg-white text-black cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2"
-            : "bg-gray-900 text-white hover:bg-red-950"
+          className={`w-64 py-3 rounded-xl text-sm font-medium transition-colors justify-center flex items-center bg-white
+             cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2 "
             }`}
         >
           {analyzing ? (

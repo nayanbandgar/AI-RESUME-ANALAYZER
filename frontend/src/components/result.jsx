@@ -3,98 +3,156 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
 } from "recharts";
-
-const mockResults = [
- 
- 
- 
-  {
-    id: 5,
-    name: "Karan Singh",
-    role: "React Developer",
-    email: "karan@email.com",
-    score: 55,
-    experience: "Fresher",
-    status: "rejected",
-    skills: ["React", "CSS", "HTML"],
-    strengths: ["Basic React knowledge", "Eager to learn"],
-    weaknesses: ["No real project experience", "Weak in JavaScript fundamentals", "No version control knowledge"],
-    aiSummary: "Karan does not meet the minimum requirements for this role. Not recommended at this stage.",
-    skillScores: [
-      { skill: "React", score: 55 },
-      { skill: "CSS", score: 65 },
-      { skill: "HTML", score: 70 },
-      { skill: "JavaScript", score: 45 },
-      { skill: "Git", score: 30 },
-    ],
-    radarData: [
-      { subject: "Technical", value: 55 },
-      { subject: "Communication", value: 50 },
-      { subject: "Experience", value: 20 },
-      { subject: "Leadership", value: 30 },
-      { subject: "Problem Solving", value: 50 },
-    ],
-  },
-];
-
-const statusStyle = {
-  top: "bg-green-50 text-green-600",
-  review: "bg-yellow-50 text-yellow-600",
-  rejected: "bg-red-50 text-red-500",
-};
-
-const statusLabel = {
-  top: "Top Match",
-  review: "Review",
-  rejected: "Low Match",
-};
-
-const scoreColor = (score) => {
-  if (score >= 80) return "#16a34a";
-  if (score >= 60) return "#ca8a04";
-  return "#dc2626";
-};
-
-// Score Gauge Component
-function ScoreGauge({ score }) {
-  const radius = 54;
-  const stroke = 10;
-  const circumference = Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
-  const color = scoreColor(score);
-
-  return (
-    <div className=" flex flex-col items-center">
-      <svg width="130" height="75" viewBox="0 0 130 75">
-        <path
-          d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
-          fill="none" stroke="#f3f4f6" strokeWidth={stroke} strokeLinecap="round"
-        />
-        <path
-          d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
-          fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 1s ease" }}
-        />
-        <text x="65" y="68" textAnchor="middle" fontSize="22" fontWeight="600" fill={color}>
-          {score}%
-        </text>
-      </svg>
-      <p className="text-xs text-gray-400 -mt-1">Overall Match Score</p>
-    </div>
-  );
-}
+import { useLocation } from "react-router-dom";
+const backendResults =
+    location.state?.results || [];
 
 export default function Results() {
-  const [filter, setFilter] = useState("all");
+  const location = useLocation();
+  const results = backendResults.map(
+    (candidate, index) => ({
+      id: index + 1,
+      name: candidate.candidate_name,
+      role: candidate.role || "Candidate",
+      email: candidate.email,
+      score: candidate.score,
+      experience: candidate.experience || "Fresher",
+      status: candidate.score >= 80
+        ? "top"
+        :
+        candidate.score >= 60
+          ? "review"
+          :
+          "rejected",
+      skills:
+        candidate.skills || [],
+
+      strengths:
+        candidate.strengths || [],
+
+      weaknesses:
+        candidate.weaknesses || [],
+
+      aiSummary:
+        candidate.ai_summary
+        || "No AI Summary",
+      skillScores:
+        (candidate.skills || [])
+          .map(skill => ({
+
+            skill,
+
+            score:
+              candidate.score
+
+          })),
+
+      radarData: [
+
+        {
+          subject: "Technical",
+          value:
+            candidate.score
+        },
+
+        {
+          subject: "Communication",
+          value: 70
+        },
+
+        {
+          subject: "Experience",
+          value: 60
+        },
+
+        {
+          subject: "Leadership",
+          value: 50
+        },
+
+        {
+          subject: "Problem Solving",
+          value: 80
+        }
+
+      ]
+
+    }))
+const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(null);
 
+  
   const filtered =
-    filter === "all" ? mockResults : mockResults.filter((r) => r.status === filter);
+
+    filter === "all"
+
+      ?
+
+      results
+
+      :
+
+      results.filter(
+
+        r => r.status === filter
+
+      );
+
+  const statusStyle = {
+    top: "bg-green-50 text-green-600",
+    review: "bg-yellow-50 text-yellow-600",
+    rejected: "bg-red-50 text-red-500",
+  };
+
+  const statusLabel = {
+    top: "Top Match",
+    review: "Review",
+    rejected: "Low Match",
+  };
+
+  const scoreColor = (score) => {
+    if (score >= 80) return "#16a34a";
+    if (score >= 60) return "#ca8a04";
+    return "#dc2626";
+  };
+  
+// Score Gauge Component
+function ScoreGauge({ score }) {
+          const radius = 54;
+          const stroke = 10;
+          const circumference = Math.PI * radius;
+          const offset = circumference - (score / 100) * circumference;
+          const color = scoreColor(score);
+
+          return (
+            <div className=" flex flex-col items-center">
+              <svg width="130" height="75" viewBox="0 0 130 75">
+                <path
+                  d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
+                  fill="none" stroke="#f3f4f6" strokeWidth={stroke} strokeLinecap="round"
+                />
+                <path
+                  d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
+                  fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={offset}
+                  style={{ transition: "stroke-dashoffset 1s ease" }}
+                />
+                <text x="65" y="68" textAnchor="middle" fontSize="22" fontWeight="600" fill={color}>
+                  {score}%
+                </text>
+              </svg>
+              <p className="text-xs text-gray-400 -mt-1">Overall Match Score</p>
+            </div>
+          );
+        }
+
+
+
+
 
   return (
-    <div className="flex gap-4 max-w-5xl bg-black mx-auto relative">
+    <div className="flex gap-4 max-w-5xl mx-auto relative">
 
       {/* Results List */}
       <div className={`flex flex-col gap-3 transition-all duration-300 ${selected ? "w-[45%]" : "w-full"}`}>
@@ -110,8 +168,8 @@ export default function Results() {
               key={f}
               onClick={() => setFilter(f)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${filter === f
-                  ? "bg-gray-900 text-white"
-                  : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
+                ? "bg-gray-900 text-white"
+                : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
                 }`}
             >
               {f === "all" ? "All" : statusLabel[f]}
@@ -124,8 +182,8 @@ export default function Results() {
             key={r.id}
             onClick={() => setSelected(r)}
             className={`bg-white border rounded-xl p-4 flex items-center gap-4 cursor-pointer transition-all ${selected?.id === r.id
-                ? "border-blue-300 ring-2 ring-blue-100"
-                : "border-gray-100 hover:border-gray-200"
+              ? "border-blue-300 ring-2 ring-blue-100"
+              : "border-gray-100 hover:border-gray-200"
               }`}
           >
             <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 text-sm font-medium flex items-center justify-center shrink-0">
@@ -175,7 +233,7 @@ export default function Results() {
           </div>
 
           {/* Score Gauge */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-4 flex justify-center">
+          <div className="bg-gray-900 rounded-xl p-4 mb-4 flex justify-center">
             <ScoreGauge score={selected.score} />
           </div>
 
@@ -277,3 +335,4 @@ export default function Results() {
     </div>
   );
 }
+

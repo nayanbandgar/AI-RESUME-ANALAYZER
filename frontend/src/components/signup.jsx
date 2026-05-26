@@ -109,7 +109,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-r from-red-950  to-black  flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-b from-blue-100 via-blue-900   to-blue-950 flex items-center justify-center px-4">
       <div className="bg-black-100  border-white border-4 rounded-2xl p-10 w-full max-w-md">
 
         {/* Header */}

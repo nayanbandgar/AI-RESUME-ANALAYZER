@@ -1,6 +1,6 @@
 export default function Dashboard() {
   return (
-    <div className="h-full  w-full bg-linear-to-br from-[#dae2f8] to-[#d6a4a4]">
+    <div className="h-full  w-full ">
       <h1 className="text-xl font-medium text-gray-700 mb-6 ">Dashboard</h1>
       <div className="grid grid-cols-2 gap-4 w-3xl p-20 mx-auto">
         {[
