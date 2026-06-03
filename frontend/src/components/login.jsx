@@ -103,16 +103,16 @@ export default function Login() {
 
         {/* Header */}
         <div className="text-center mb-8 ">
-          <div className="w-16 h-16 rounded-full bg-white border-red-900 border-2 text-red-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
+          <div className="w-16 h-16 rounded-full bg-white border-blue-900 border-2 text-blue-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
             HR
           </div>
           <h2 className="text-2xl font-medium text-white">Welcome back</h2>
-          <p className="text-sm text-gray-500 mt-1">Sign in to your account</p>
+          <p className="text-sm text-blue-100 mt-1">Sign in to your account</p>
         </div>
 
         {/* Email */}
         <div className="mb-5">
-          <label className="block text-sm text-gray-500 mb-1.5">Email address</label>
+          <label className="block text-sm text-gray-200 mb-1.5">Email address</label>
           <input
             type="email"
             name="email"
@@ -124,7 +124,7 @@ export default function Login() {
                 email: e.target.value
               })
             }
-            className={`w-full px-3 py-2.5 border text-white placeholder:text-gray-500 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.email ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-blue-300"
+            className={`w-full px-3 py-2.5 border text-white placeholder:text-gray-400 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 ${errors.email ? "border-red-400 focus:border-red-400" : "border-gray-200 focus:border-blue-300"
               }`}
           />
           {errors.email && (
@@ -160,11 +160,11 @@ export default function Login() {
         <div className="mb-6 ">
 
           <div className="flex justify-between items-center mb-1.5">
-            <label className="text-sm text-gray-500">Password   {/* Eye Icon */}
+            <label className="text-sm text-gray-200">Password   {/* Eye Icon */}
 
 
             </label>
-            <a href="/forgot-password" className="text-sm text-gray-500 hover:underline">
+            <a href="/forgot-password" className="text-sm text-gray-200 hover:underline">
               Forgot password?
             </a>
           </div>
@@ -211,14 +211,14 @@ export default function Login() {
         <button
           type="button"
           onClick={loginUser}
-          className="w-full py-2.5  bg-white text-gray-900 text-l font-medium rounded-lg  hover:bg-red-950 border-gray-200 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
+          className="w-full py-2.5  bg-white text-gray-900 text-l font-medium rounded-lg  hover:bg-blue-950 border-gray-200 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
         >
           Log in
         </button>
 
         <p className="text-center text-sm text-gray-400 mt-5">
           Don't have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">Sign up</a>
+          <a href="/signup" className="text-blue-100 hover:underline">Sign up</a>
         </p>
 
       </div>

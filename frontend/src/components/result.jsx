@@ -4,11 +4,13 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
 } from "recharts";
 import { useLocation } from "react-router-dom";
-const backendResults =
-    location.state?.results || [];
+
 
 export default function Results() {
+
   const location = useLocation();
+  const backendResults =
+    location.state?.results || [];
   const results = backendResults.map(
     (candidate, index) => ({
       id: index + 1,
@@ -78,10 +80,10 @@ export default function Results() {
       ]
 
     }))
-const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(null);
 
-  
+
   const filtered =
 
     filter === "all"
@@ -115,37 +117,37 @@ const [filter, setFilter] = useState("all");
     if (score >= 60) return "#ca8a04";
     return "#dc2626";
   };
-  
-// Score Gauge Component
-function ScoreGauge({ score }) {
-          const radius = 54;
-          const stroke = 10;
-          const circumference = Math.PI * radius;
-          const offset = circumference - (score / 100) * circumference;
-          const color = scoreColor(score);
 
-          return (
-            <div className=" flex flex-col items-center">
-              <svg width="130" height="75" viewBox="0 0 130 75">
-                <path
-                  d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
-                  fill="none" stroke="#f3f4f6" strokeWidth={stroke} strokeLinecap="round"
-                />
-                <path
-                  d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
-                  fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round"
-                  strokeDasharray={circumference}
-                  strokeDashoffset={offset}
-                  style={{ transition: "stroke-dashoffset 1s ease" }}
-                />
-                <text x="65" y="68" textAnchor="middle" fontSize="22" fontWeight="600" fill={color}>
-                  {score}%
-                </text>
-              </svg>
-              <p className="text-xs text-gray-400 -mt-1">Overall Match Score</p>
-            </div>
-          );
-        }
+  // Score Gauge Component
+  function ScoreGauge({ score }) {
+    const radius = 54;
+    const stroke = 10;
+    const circumference = Math.PI * radius;
+    const offset = circumference - (score / 100) * circumference;
+    const color = scoreColor(score);
+
+    return (
+      <div className=" flex flex-col items-center">
+        <svg width="130" height="75" viewBox="0 0 130 75">
+          <path
+            d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
+            fill="none" stroke="#f3f4f6" strokeWidth={stroke} strokeLinecap="round"
+          />
+          <path
+            d={`M 10 70 A ${radius} ${radius} 0 0 1 120 70`}
+            fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            style={{ transition: "stroke-dashoffset 1s ease" }}
+          />
+          <text x="65" y="68" textAnchor="middle" fontSize="22" fontWeight="600" fill={color}>
+            {score}%
+          </text>
+        </svg>
+        <p className="text-xs text-gray-400 -mt-1">Overall Match Score</p>
+      </div>
+    );
+  }
 
 
 
@@ -187,7 +189,10 @@ function ScoreGauge({ score }) {
               }`}
           >
             <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 text-sm font-medium flex items-center justify-center shrink-0">
-              {r.name.split(" ").map((n) => n[0]).join("")}
+              {(r.name || "Unknown")
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
@@ -214,7 +219,10 @@ function ScoreGauge({ score }) {
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 text-base font-medium flex items-center justify-center">
-                {selected.name.split(" ").map((n) => n[0]).join("")}
+                {(selected.name || "Unknown")
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </div>
               <div>
                 <p className="text-base font-medium text-gray-900">{selected.name}</p>

@@ -1,13 +1,16 @@
+
+from bson import ObjectId
 from fastapi import APIRouter
 from app.database import db
 from fastapi import UploadFile, File, HTTPException
 from typing import List
-from app.resume_parser import extract_text,parse_resume
+from app.resume_parser import extract_text, parse_resume
 from datetime import datetime
 import uuid
 from email.mime.text import MIMEText
 from fastapi import Body
 from app.utils.matcher import calculate_score
+import uuid
 
 import dotenv
 import os
@@ -64,69 +67,171 @@ async def signup(data: dict):
 # ===================================
 # UPLOADRESUMES
 # ===================================
+# @router.post("/upload-resume")
+# async def upload_resume(file: UploadFile = File(...)):
+
+#     print("API CALLED")
+#     unique_name = (
+#     str(uuid.uuid4())
+#     + "_"
+#     + file.filename
+#                      )
+
+
+
+#     file_path = f"uploads/{unique_name}"
+
+#     with open(file_path, "wb") as buffer:
+#         shutil.copyfileobj(file.file, buffer)
+
+#     print("FILE SAVED")
+
+    
+   
+#     db.resumes.insert_one(
+#         {
+#             "filename": file.filename,
+#             "path": file_path,
+#             "resume_text": extracted_text,
+#             "candidate_name": parsed_data.get("candidate_name", ""),
+#             "candidate_email": parsed_data.get("email", ""),
+#             "skills": parsed_data.get("skills", []),
+#         }
+#     )
+#     extracted_text = extract_text(
+#         file_path,
+#     )
+
+#     parsed_data = parse_resume(file_path, file.filename)
+
+#     print("PARSED DATA =", parsed_data)
+#     print("DATA INSERTED")
+
+#     return { "message": "Resume Uploaded Successfully",
+#     "candidate_name":
+#         parsed_data.get(
+#             "candidate_name"
+#         ),
+#     "email":
+#         parsed_data.get(
+#             "email"
+#         )}
+
 @router.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
 
     print("API CALLED")
 
-    file_path = f"uploads/{file.filename}"
+    unique_name = (
+        str(uuid.uuid4()) + "_" + file.filename
+    )
+
+    file_path = f"uploads/{unique_name}"
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     print("FILE SAVED")
 
-    extracted_text = extract_text(
-        file_path,
-        
+    # Extract text
+    extracted_text = extract_text(file_path)
+
+    print("TEXT EXTRACTED")
+
+    # Parse resume
+    parsed_data = parse_resume(extracted_text)
+
+    print("PARSED DATA =", parsed_data)
+
+    # Save in MongoDB
+    db.resumes.insert_one(
+        {
+            "filename": file.filename,
+            "path": file_path,
+            "resume_text": extracted_text,
+            "candidate_name": parsed_data.get(
+                "candidate_name",
+                ""
+            ),
+            "candidate_email": parsed_data.get(
+                "email",
+                ""
+            ),
+            "skills": parsed_data.get(
+                "skills",
+                []
+            ),
+        }
     )
-
-    parsed_data = parse_resume(
-        file_path,
-        file.filename
-    )
-
-    db.resumes.insert_one({
-        "filename": file.filename,
-        "path": file_path,
-        "resume_text": extracted_text,
-
-        "candidate_name":
-        parsed_data.get(
-            "name",
-            "Unknown"
-        ),
-
-        "candidate_email":
-        parsed_data.get(
-            "email",
-            ""
-        ),
-
-        "skills":
-        parsed_data.get(
-            "skills",
-            []
-        )
-    })
 
     print("DATA INSERTED")
 
     return {
-        "message":
-        "Resume Uploaded Successfully"
+        "message": "Resume Uploaded Successfully",
+        "candidate_name": parsed_data.get(
+            "candidate_name"
+        ),
+        "email": parsed_data.get(
+            "email"
+        )
     }
-
-
 # ===================================
 # analyeze resumes
 # ===================================
+# @router.post("/analyze")
+# async def analyze(data: dict):
+
+#      jd = data["job_description"]
+#      jd_words = set(jd.lower().split())
+
+#      resume_id = data["resume_id"]
+
+#      resume = db.resumes.find_one(
+#         {"_id": ObjectId(resume_id)}
+#     )
+
+#      if not resume:
+#         return {"message": "Resume not found"}
+
+#      resume_words = set(
+#         resume["resume_text"].lower().split()
+#     )
+
+#      matched = jd_words.intersection(resume_words)
+
+#      score = (len(matched) / len(jd_words)) * 100
+
+#      history_doc = {
+#         "candidate_name": resume.get("candidate_name", "Unknown"),
+#         "filename": resume["filename"],
+#         "score": round(score, 2),
+#         "matched": list(matched),
+#         "analyzed_at": datetime.utcnow(),
+#     }
+
+#      db.resultHistory.insert_one(history_doc)
+
+#      result = {
+#         "candidate_name": resume.get("candidate_name", "Unknown"),
+#         "email": resume.get("candidate_email", ""),
+#         "filename": resume["filename"],
+#         "skills": resume.get("skills", []),
+#         "score": round(score, 2),
+#         "matched": list(matched),
+#     }
+
+#      return {
+#         "results": [result],
+#         "message": "Resume Uploaded Successfully",
+#         "resume_id": str(resume["_id"])
+
+#     }
 @router.post("/analyze")
 async def analyze(data: dict):
 
-    jd = data["job_description"]
+    analysis_id = str(uuid.uuid4())
 
-    jd_words = set(jd.lower().split())
+    jd = data["job_description"]
 
     resumes = list(db.resumes.find())
 
@@ -134,23 +239,74 @@ async def analyze(data: dict):
 
     for resume in resumes:
 
-        resume_words = set(resume["resume_text"].lower().split())
-
-        matched = jd_words.intersection(resume_words)
-
-        score = (len(matched) / len(jd_words)) * 100
-
-        results.append(
-            {
-                "filename": resume["filename"],
-                "score": round(score, 2),
-                "matched": list(matched),
-            }
+        score = calculate_score(
+            resume["resume_text"],
+            jd
         )
 
-    results.sort(key=lambda x: x["score"], reverse=True)
+        result = {
+            "candidate_name": resume.get(
+                "candidate_name",
+                "Unknown"
+            ),
 
-    return {"results": results}
+            "email": resume.get(
+                "candidate_email",
+                ""
+            ),
+
+            "skills": resume.get(
+                "skills",
+                []
+            ),
+
+            "score": float(score),
+
+            "experience": "Fresher",
+
+            "strengths": [],
+
+            "weaknesses": [],
+
+            "ai_summary":
+                f"Resume matches the job description by {score}%"
+        }
+
+        results.append(result)
+
+        # History Save
+        db.resumeHistory.insert_one({
+
+            "analysis_id": analysis_id,
+
+            "candidate_name":
+                result["candidate_name"],
+
+            "email":
+                result["email"],
+
+            "skills":
+                result["skills"],
+
+            "score":
+                result["score"],
+
+            "job_description":
+                jd,
+
+            "analyzed_at":
+                datetime.utcnow()
+        })
+
+    results.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    return {
+        "results": results
+    }
+
 
 
 @router.post("/save-job")
@@ -176,3 +332,31 @@ async def get_roles():
     roles = [job["job_title"] for job in jobs if "job_title" in job]
 
     return {"roles": list(set(roles))}
+
+@router.get("/history")
+async def get_history():
+
+    history = list(
+        db.history.find()
+    )
+
+    for item in history:
+        item["_id"] = str(item["_id"])
+
+    return {
+        "history": history
+    }
+@router.get("/resume-history")
+async def get_resume_history():
+
+    history = list(
+        db.resumeHistory.find()
+        .sort("analyzed_at", -1)
+    )
+
+    for item in history:
+        item["_id"] = str(item["_id"])
+
+    return {
+        "history": history
+    }

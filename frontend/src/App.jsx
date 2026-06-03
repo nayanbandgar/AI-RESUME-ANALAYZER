@@ -11,6 +11,7 @@ import Results from "./components/result.jsx";
 import UploadResume from "./components/uploadresume.jsx";
 import Candidate from "./components/candidate.jsx";
 import Settings from "./components/setting.jsx";
+import history from "./components/history.jsx";
 
 export default function App() {
   return (
@@ -29,6 +30,8 @@ export default function App() {
         <Route path="/candidates" element={<Candidate/>} />
         <Route path="/profile" element={<ProfilePage/> } />
         <Route path="/settings" element={<Settings/>} />
+        <Route path="/history" element={<History/>} />
+
         </Route>
     </Routes>
   );

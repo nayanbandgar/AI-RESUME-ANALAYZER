@@ -168,6 +168,15 @@ export default function Analyze() {
 
 }
   };
+ async function handleAnalyze() {
+  const response = await axios.post("/analyze", {
+    job_description: jd,
+    resume_id: resumeId
+  });
+
+  console.log(response.data);
+}
+
 
 
 

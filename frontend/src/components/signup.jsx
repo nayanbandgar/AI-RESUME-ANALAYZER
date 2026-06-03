@@ -114,11 +114,11 @@ export default function Signup() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-white border-red-900 border-2 text-red-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
+          <div className="w-16 h-16 rounded-full bg-white border-blue-900 border-2 text-blue-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
             HR
           </div>
           <h2 className="text-xl font-medium text-white">Create an account</h2>
-          <p className="text-sm text-gray-400 mt-1">Sign up to get started</p>
+          <p className="text-sm text-blue-50 mt-1">Sign up to get started</p>
         </div>
 
         {/* Name */}
@@ -273,7 +273,7 @@ export default function Signup() {
         <button
           type="button"
           onClick={signupUser}
-          className="w-full py-2.5 bg-white text-black text-l font-medium rounded-lg hover:bg-red-950 border-gray-200 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
+          className="w-full py-2.5 bg-white text-black text-l font-medium rounded-lg hover:bg-blue-950 border-gray-100 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
         >
           Create account
         </button>
