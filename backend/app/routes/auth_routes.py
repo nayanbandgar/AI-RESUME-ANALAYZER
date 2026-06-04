@@ -1,4 +1,3 @@
-
 from bson import ObjectId
 from fastapi import APIRouter
 from app.database import db
@@ -67,64 +66,13 @@ async def signup(data: dict):
 # ===================================
 # UPLOADRESUMES
 # ===================================
-# @router.post("/upload-resume")
-# async def upload_resume(file: UploadFile = File(...)):
-
-#     print("API CALLED")
-#     unique_name = (
-#     str(uuid.uuid4())
-#     + "_"
-#     + file.filename
-#                      )
-
-
-
-#     file_path = f"uploads/{unique_name}"
-
-#     with open(file_path, "wb") as buffer:
-#         shutil.copyfileobj(file.file, buffer)
-
-#     print("FILE SAVED")
-
-    
-   
-#     db.resumes.insert_one(
-#         {
-#             "filename": file.filename,
-#             "path": file_path,
-#             "resume_text": extracted_text,
-#             "candidate_name": parsed_data.get("candidate_name", ""),
-#             "candidate_email": parsed_data.get("email", ""),
-#             "skills": parsed_data.get("skills", []),
-#         }
-#     )
-#     extracted_text = extract_text(
-#         file_path,
-#     )
-
-#     parsed_data = parse_resume(file_path, file.filename)
-
-#     print("PARSED DATA =", parsed_data)
-#     print("DATA INSERTED")
-
-#     return { "message": "Resume Uploaded Successfully",
-#     "candidate_name":
-#         parsed_data.get(
-#             "candidate_name"
-#         ),
-#     "email":
-#         parsed_data.get(
-#             "email"
-#         )}
 
 @router.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
 
     print("API CALLED")
 
-    unique_name = (
-        str(uuid.uuid4()) + "_" + file.filename
-    )
+    unique_name = str(uuid.uuid4()) + "_" + file.filename
 
     file_path = f"uploads/{unique_name}"
 
@@ -149,18 +97,9 @@ async def upload_resume(file: UploadFile = File(...)):
             "filename": file.filename,
             "path": file_path,
             "resume_text": extracted_text,
-            "candidate_name": parsed_data.get(
-                "candidate_name",
-                ""
-            ),
-            "candidate_email": parsed_data.get(
-                "email",
-                ""
-            ),
-            "skills": parsed_data.get(
-                "skills",
-                []
-            ),
+            "candidate_name": parsed_data.get("candidate_name", ""),
+            "candidate_email": parsed_data.get("email", ""),
+            "skills": parsed_data.get("skills", []),
         }
     )
 
@@ -168,64 +107,16 @@ async def upload_resume(file: UploadFile = File(...)):
 
     return {
         "message": "Resume Uploaded Successfully",
-        "candidate_name": parsed_data.get(
-            "candidate_name"
-        ),
-        "email": parsed_data.get(
-            "email"
-        )
+        "candidate_name": parsed_data.get("candidate_name"),
+        "email": parsed_data.get("email"),
     }
+
+
 # ===================================
 # analyeze resumes
 # ===================================
-# @router.post("/analyze")
-# async def analyze(data: dict):
 
-#      jd = data["job_description"]
-#      jd_words = set(jd.lower().split())
 
-#      resume_id = data["resume_id"]
-
-#      resume = db.resumes.find_one(
-#         {"_id": ObjectId(resume_id)}
-#     )
-
-#      if not resume:
-#         return {"message": "Resume not found"}
-
-#      resume_words = set(
-#         resume["resume_text"].lower().split()
-#     )
-
-#      matched = jd_words.intersection(resume_words)
-
-#      score = (len(matched) / len(jd_words)) * 100
-
-#      history_doc = {
-#         "candidate_name": resume.get("candidate_name", "Unknown"),
-#         "filename": resume["filename"],
-#         "score": round(score, 2),
-#         "matched": list(matched),
-#         "analyzed_at": datetime.utcnow(),
-#     }
-
-#      db.resultHistory.insert_one(history_doc)
-
-#      result = {
-#         "candidate_name": resume.get("candidate_name", "Unknown"),
-#         "email": resume.get("candidate_email", ""),
-#         "filename": resume["filename"],
-#         "skills": resume.get("skills", []),
-#         "score": round(score, 2),
-#         "matched": list(matched),
-#     }
-
-#      return {
-#         "results": [result],
-#         "message": "Resume Uploaded Successfully",
-#         "resume_id": str(resume["_id"])
-
-#     }
 @router.post("/analyze")
 async def analyze(data: dict):
 
@@ -239,74 +130,37 @@ async def analyze(data: dict):
 
     for resume in resumes:
 
-        score = calculate_score(
-            resume["resume_text"],
-            jd
-        )
+        score = calculate_score(resume["resume_text"], jd)
 
         result = {
-            "candidate_name": resume.get(
-                "candidate_name",
-                "Unknown"
-            ),
-
-            "email": resume.get(
-                "candidate_email",
-                ""
-            ),
-
-            "skills": resume.get(
-                "skills",
-                []
-            ),
-
+            "candidate_name": resume.get("candidate_name", "Unknown"),
+            "email": resume.get("candidate_email", ""),
+            "skills": resume.get("skills", []),
             "score": float(score),
-
             "experience": "Fresher",
-
             "strengths": [],
-
             "weaknesses": [],
-
-            "ai_summary":
-                f"Resume matches the job description by {score}%"
+            "ai_summary": f"Resume matches the job description by {score}%",
         }
 
         results.append(result)
 
         # History Save
-        db.resumeHistory.insert_one({
+        db.resumeHistory.insert_one(
+            {
+                "analysis_id": analysis_id,
+                "candidate_name": result["candidate_name"],
+                "email": result["email"],
+                "skills": result["skills"],
+                "score": result["score"],
+                "job_description": jd,
+                "analyzed_at": datetime.utcnow(),
+            }
+        )
 
-            "analysis_id": analysis_id,
+    results.sort(key=lambda x: x["score"], reverse=True)
 
-            "candidate_name":
-                result["candidate_name"],
-
-            "email":
-                result["email"],
-
-            "skills":
-                result["skills"],
-
-            "score":
-                result["score"],
-
-            "job_description":
-                jd,
-
-            "analyzed_at":
-                datetime.utcnow()
-        })
-
-    results.sort(
-        key=lambda x: x["score"],
-        reverse=True
-    )
-
-    return {
-        "results": results
-    }
-
+    return {"results": results}
 
 
 @router.post("/save-job")
@@ -333,30 +187,24 @@ async def get_roles():
 
     return {"roles": list(set(roles))}
 
+
 @router.get("/history")
 async def get_history():
 
-    history = list(
-        db.history.find()
-    )
+    history = list(db.history.find())
 
     for item in history:
         item["_id"] = str(item["_id"])
 
-    return {
-        "history": history
-    }
+    return {"history": history}
+
+
 @router.get("/resume-history")
 async def get_resume_history():
 
-    history = list(
-        db.resumeHistory.find()
-        .sort("analyzed_at", -1)
-    )
+    history = list(db.resumeHistory.find().sort("analyzed_at", -1))
 
     for item in history:
         item["_id"] = str(item["_id"])
 
-    return {
-        "history": history
-    }
+    return {"history": history}
