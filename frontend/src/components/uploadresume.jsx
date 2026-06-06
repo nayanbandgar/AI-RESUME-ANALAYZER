@@ -32,7 +32,7 @@ export default function UploadResume() {
     // Add your upload API call here
   };
   const uploadResume = async () => {
-
+    const uploadedResumeIds = [];
     if (files.length === 0) {
 
       alert("Please select resumes");
@@ -52,10 +52,13 @@ export default function UploadResume() {
           "http://127.0.0.1:8000/upload-resume",
           formData
         );
-
-        console.log(response.data);
+          uploadedResumeIds.push(
+         response.data.resume_id);
+        
       }
-
+     localStorage.setItem(
+     "resumeIds",
+     JSON.stringify(uploadedResumeIds));
       alert("All resumes uploaded successfully");
 
       navigate("/analyze");
@@ -68,7 +71,7 @@ export default function UploadResume() {
 
     }
   };
-
+   
 
   return (
 
@@ -94,7 +97,7 @@ export default function UploadResume() {
         </svg>
         <p className="text-sm font-medium text-gray-400 mb-1">Drag & drop resumes here</p>
         <p className="text-xs text-gray-500 mb-4">Supports PDF, DOC, DOCX</p>
-        <label className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg cursor-pointer hover:bg-red-950  hover:text-white hover:border-white hover:border-2 transition-colors">
+        <label className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg cursor-pointer hover:bg-blue-950  hover:text-white hover:border-white hover:border-2 transition-colors">
           Browse Files
           <input
             type="file"
@@ -108,7 +111,7 @@ export default function UploadResume() {
 
       {/* File List */}
       {files.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-xl p-4 mb-5 hover:bg-red-950 hover:text-white transition-colors hover:border-white hover:border-2 hover:cursor-pointer ">
+        <div className="bg-white border border-gray-100 rounded-xl p-4 mb-5 hover:bg-blue-950 hover:text-white transition-colors hover:border-white hover:border-2 hover:cursor-pointer ">
           <p className="text-sm font-medium text-black mb-3 hover:text-white">{files.length} file(s) selected</p>
           <div className="flex flex-col gap-2">
             {files.map((file, i) => (
@@ -142,8 +145,8 @@ export default function UploadResume() {
         onClick={uploadResume}
         disabled={files.length === 0}
         className={`w-64 py-3 rounded-xl text-lg font-medium flex justify-center  transition-colors ${files.length === 0
-          ? "bg-white text-gray-900 cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2"
-          : "bg-white text-black hover:bg-red-950 hover:text-white hover:border-white hover:border-2"
+          ? "bg-white text-gray-900 cursor-pointer hover:bg-blue-950 hover:text-white hover:border-white hover:border-2"
+          : "bg-white text-black hover:bg-blue-950 hover:text-white hover:border-white hover:border-2"
           }`}
       >
         Upload {files.length > 0 ? `${files.length} Resume(s)` : "Resumes"}

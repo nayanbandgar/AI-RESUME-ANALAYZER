@@ -128,12 +128,14 @@ export default function Analyze() {
           "http://127.0.0.1:8000/analyze",
 
           {
-            job_description: jobDescription
+            job_description: jobDescription,
+            resume_ids: resumeIds
           }
         );
-
+  console.log("Analyze Response:", response);
+console.log("Analyze Data:", response.data);
       setAnalyzing(false);
-
+       
       navigate(
 
         "/results",
@@ -176,6 +178,10 @@ export default function Analyze() {
 
   console.log(response.data);
 }
+const resumeIds = JSON.parse(
+  localStorage.getItem("resumeIds")
+);
+
 
 
 
@@ -185,14 +191,14 @@ export default function Analyze() {
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-xl font-medium text-gray-400">Analyze Resumes</h1>
-        <p className="text-sm text-gray-400 mt-1">
+        <h1 className="text-xl font-medium text-blue-950">Analyze Resumes</h1>
+        <p className="text-sm text-blue-800 mt-1">
           Enter job details and let AI match the best candidates.
         </p>
       </div>
       {/*role for job*/}
       <div className="relative">
-        <label className="block text-lg font-medium text-gray-400">
+        <label className="block text-lg font-medium text-white">
           Role
         </label>
         <input
@@ -227,8 +233,8 @@ export default function Analyze() {
       </div>
 
       {/* Job Description */}
-      <div className="  rounded-xl  mb-4">
-        <label className="block text-lg font-medium text-gray-400 mb-2">
+      <div className="  rounded-xl   my-4 mb-4">
+        <label className="block text-lg font-medium text-white mb-2">
           Job Description
         </label>
         <textarea
@@ -244,8 +250,8 @@ export default function Analyze() {
       </div>
 
       {/* Required Skills */}
-      <div className=" border  rounded-xl  mb-4">
-        <label className="block text-sm font-medium text-gray-400 mb-2">
+      <div className="   rounded-xl  mb-4">
+        <label className="block text-sm font-medium text-white mb-2">
           Required Skills
           <span className="text-gray-500 font-normal ml-1">(comma separated)</span>
         </label>
@@ -276,7 +282,7 @@ export default function Analyze() {
 
       {/* Experience Level */}
       <div className="  rounded-xl  mb-6">
-        <label className="block text-sm font-medium text-gray-400 mb-3">
+        <label className="block text-sm font-medium text-white mb-3">
           Experience Level
         </label>
         <div className="grid grid-cols-4 gap-2">
@@ -306,7 +312,7 @@ export default function Analyze() {
           onClick={runAnalysis}
           disabled={analyzing || !jobDescription.trim()}
           className={`w-64 py-3 rounded-xl text-sm font-medium transition-colors justify-center flex items-center bg-white
-             cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2 "
+             cursor-pointer hover:bg-blue-950 hover:text-white hover:border-white hover:border-2 "
             }`}
         >
           {analyzing ? (

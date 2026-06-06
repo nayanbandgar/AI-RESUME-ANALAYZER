@@ -113,7 +113,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-screen bg-linear-to-b from-blue-100 via-blue-900   to-blue-950 border-r border-gray-100 flex flex-col">
+    <div className="w-64 h-screen bg-blue-100 border-r border-gray-100 flex flex-col">
 
       {/* Logo */}
       <div className="px-4 py-5 border-b border-gray-100">

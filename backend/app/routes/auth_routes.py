@@ -10,7 +10,7 @@ from email.mime.text import MIMEText
 from fastapi import Body
 from app.utils.matcher import calculate_score
 import uuid
-
+from bson import ObjectId
 import dotenv
 import os
 import random
@@ -86,29 +86,30 @@ async def upload_resume(file: UploadFile = File(...)):
 
     print("TEXT EXTRACTED")
 
-    # Parse resume
+    # Parse resume   
     parsed_data = parse_resume(extracted_text)
 
     print("PARSED DATA =", parsed_data)
 
     # Save in MongoDB
-    db.resumes.insert_one(
-        {
-            "filename": file.filename,
-            "path": file_path,
-            "resume_text": extracted_text,
-            "candidate_name": parsed_data.get("candidate_name", ""),
-            "candidate_email": parsed_data.get("email", ""),
-            "skills": parsed_data.get("skills", []),
-        }
-    )
+    parsed_data = parse_resume(extracted_text)
 
-    print("DATA INSERTED")
+    inserted = db.resumes.insert_one(
+    {
+        "filename": file.filename,
+        "path": file_path,
+        "resume_text": extracted_text,
+        "candidate_name": parsed_data.get("candidate_name", ""),
+        "candidate_email": parsed_data.get("email", ""),
+        "skills": parsed_data.get("skills", []),
+    }
+)
 
     return {
         "message": "Resume Uploaded Successfully",
         "candidate_name": parsed_data.get("candidate_name"),
         "email": parsed_data.get("email"),
+        "resume_id": str(inserted.inserted_id)
     }
 
 
@@ -124,13 +125,29 @@ async def analyze(data: dict):
 
     jd = data["job_description"]
 
-    resumes = list(db.resumes.find())
+    resume_ids = data["resume_ids"]
+
+    resumes = list(
+        db.resumes.find(
+            {
+                "_id": {
+                    "$in": [
+                        ObjectId(id)
+                        for id in resume_ids
+                    ]
+                }
+            }
+        )
+    )
 
     results = []
 
     for resume in resumes:
 
-        score = calculate_score(resume["resume_text"], jd)
+        score = calculate_score(
+            resume["resume_text"],
+            jd
+        )
 
         result = {
             "candidate_name": resume.get("candidate_name", "Unknown"),
@@ -140,28 +157,32 @@ async def analyze(data: dict):
             "experience": "Fresher",
             "strengths": [],
             "weaknesses": [],
-            "ai_summary": f"Resume matches the job description by {score}%",
+            "ai_summary": f"Resume matches the job description by {score}%"
         }
 
         results.append(result)
+        db.resumeHistory.insert_one({
+        "analysis_id": analysis_id,
+        "candidate_name": result["candidate_name"],
+        "email": result["email"],
+        "skills": result["skills"],
+        "score": result["score"],
+        "experience": result["experience"],
+        "strengths": result["strengths"],
+        "weaknesses": result["weaknesses"],
+        "ai_summary": result["ai_summary"],
+        "job_description": jd,
+        "analyzed_at": datetime.utcnow()
+    })
 
-        # History Save
-        db.resumeHistory.insert_one(
-            {
-                "analysis_id": analysis_id,
-                "candidate_name": result["candidate_name"],
-                "email": result["email"],
-                "skills": result["skills"],
-                "score": result["score"],
-                "job_description": jd,
-                "analyzed_at": datetime.utcnow(),
-            }
-        )
+    results.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
 
-    results.sort(key=lambda x: x["score"], reverse=True)
-
-    return {"results": results}
-
+    return {
+        "results": results
+    }
 
 @router.post("/save-job")
 async def save_job(data: dict):
@@ -187,16 +208,6 @@ async def get_roles():
 
     return {"roles": list(set(roles))}
 
-
-@router.get("/history")
-async def get_history():
-
-    history = list(db.history.find())
-
-    for item in history:
-        item["_id"] = str(item["_id"])
-
-    return {"history": history}
 
 
 @router.get("/resume-history")
