@@ -102,6 +102,7 @@ async def upload_resume(file: UploadFile = File(...)):
         "candidate_name": parsed_data.get("candidate_name", ""),
         "candidate_email": parsed_data.get("email", ""),
         "skills": parsed_data.get("skills", []),
+        "uploaded_at": datetime.now()
     }
 )
 
@@ -172,7 +173,8 @@ async def analyze(data: dict):
         "weaknesses": result["weaknesses"],
         "ai_summary": result["ai_summary"],
         "job_description": jd,
-        "analyzed_at": datetime.utcnow()
+        
+        "uploaded_at": datetime.utcnow()
     })
 
     results.sort(
@@ -219,3 +221,19 @@ async def get_resume_history():
         item["_id"] = str(item["_id"])
 
     return {"history": history}
+
+@router.get("/candidates")
+async def get_candidates():
+
+    candidates = list(
+        db.resumes.find(
+            {},
+            {
+                "_id": 0
+            }
+        ).sort("uploaded_at", -1)
+    )
+
+    return {
+        "candidates": candidates
+    }

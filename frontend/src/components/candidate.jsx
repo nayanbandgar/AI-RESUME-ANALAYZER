@@ -1,12 +1,7 @@
 import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
-const allCandidates = [
-  { id: 1, name: "Aarav Sharma", role: "React Developer", email: "aarav@email.com", score: 92, status: "Shortlisted" },
-  { id: 2, name: "Priya Patel", role: "Full Stack Developer", email: "priya@email.com", score: 85, status: "Shortlisted" },
-  { id: 3, name: "Rohan Mehta", role: "Frontend Developer", email: "rohan@email.com", score: 78, status: "In Review" },
-  { id: 4, name: "Sneha Joshi", role: "Backend Developer", email: "sneha@email.com", score: 65, status: "In Review" },
-  { id: 5, name: "Karan Singh", role: "React Developer", email: "karan@email.com", score: 55, status: "Rejected" },
-];
 
 const statusStyle = {
   Shortlisted: "bg-green-50 text-green-600",
@@ -16,11 +11,41 @@ const statusStyle = {
 
 export default function Candidates() {
   const [search, setSearch] = useState("");
+  const [candidates, setCandidates] = useState([]);
+  useEffect(() => {
+    fetchCandidates();
+  }, []);
 
-  const filtered = allCandidates.filter(
+  const fetchCandidates = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/candidates"
+      );
+
+      setCandidates(response.data.candidates);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const filtered = candidates.filter(
     (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.role.toLowerCase().includes(search.toLowerCase())
+      (c.candidate_name || "")
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+
+      (c.role || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+        (c.score || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+        (c.uploaded || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+        (c.candidate_email || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+
   );
 
   return (
@@ -51,10 +76,12 @@ export default function Candidates() {
           <thead>
             <tr className="border-b border-gray-100 bg-red-200">
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Name</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-00">Role</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Score</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Status</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Role</th>
+
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Email</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">view resume</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Score</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Uploaded At</th>
             </tr>
           </thead>
           <tbody>
@@ -68,19 +95,26 @@ export default function Candidates() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-xs font-medium flex items-center justify-center shrink-0">
-                        {c.name.split(" ").map((n) => n[0]).join("")}
+                        {
+                          (c.candidate_name || "Unknown")
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                        }
                       </div>
-                      <span className="font-medium text-gray-800">{c.name}</span>
+                      <span className="font-medium text-gray-800">{c.candidate_name}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-gray-500">{c.role}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{c.score}%</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${statusStyle[c.status]}`}>
-                      {c.status}
-                    </span>
+                   <td className="px-4 py-3 text-blue-500 text-xs">{c.candidate_email}</td>
+                    <td className="px-4 py-3 text-blue-500 text-xs">{c.filename}</td>
+                  <td className="px-4 py-3 font-medium text-gray-800">{c.skills?.length || 0}</td>
+                  
+                 
+                  <td className="px-4 py-3">{c.uploaded_at
+                    ? new Date(c.uploaded_at).toLocaleString()
+                    : "N/A"}
                   </td>
-                  <td className="px-4 py-3 text-blue-500 text-xs">{c.email}</td>
                 </tr>
               ))
             )}
