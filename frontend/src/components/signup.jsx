@@ -109,12 +109,12 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-blue-100 via-blue-900   to-blue-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-b from-red-950    to-black flex items-center justify-center px-4">
       <div className="bg-black-100  border-white border-4 rounded-2xl p-10 w-full max-w-md">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-white border-blue-900 border-2 text-blue-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
+          <div className="w-16 h-16 rounded-full bg-white border-red-900 border-2 text-red-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
             HR
           </div>
           <h2 className="text-xl font-medium text-white">Create an account</h2>
@@ -273,7 +273,7 @@ export default function Signup() {
         <button
           type="button"
           onClick={signupUser}
-          className="w-full py-2.5 bg-white text-black text-l font-medium rounded-lg hover:bg-blue-950 border-gray-100 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
+          className="w-full py-2.5 bg-white text-black text-l font-medium rounded-lg hover:bg-red-950 border-gray-100 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
         >
           Create account
         </button>

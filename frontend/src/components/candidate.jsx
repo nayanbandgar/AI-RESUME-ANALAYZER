@@ -27,7 +27,7 @@ export default function Candidates() {
     <div className="max-w-3xl mx-auto">
 
       <div className="mb-6">
-        <h1 className="text-xl font-medium text-gray-900">Candidates</h1>
+        <h1 className="text-xl font-medium text-gray-100">Candidates</h1>
         <p className="text-sm text-gray-400 mt-1">Manage and track all candidates.</p>
       </div>
 
@@ -41,20 +41,20 @@ export default function Candidates() {
           placeholder="Search by name or role..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 bg-white"
+          className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-red-400 bg-red-100"
         />
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
+      <div className="bg-red-100 border border-gray-100 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50">
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400">Name</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400">Role</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400">Score</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400">Status</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400">Email</th>
+            <tr className="border-b border-gray-100 bg-red-200">
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Name</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-00">Role</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Score</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Status</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Email</th>
             </tr>
           </thead>
           <tbody>
