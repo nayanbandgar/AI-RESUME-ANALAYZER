@@ -191,14 +191,14 @@ const resumeIds = JSON.parse(
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-xl font-medium text-blue-950">Analyze Resumes</h1>
-        <p className="text-sm text-blue-800 mt-1">
+        <h1 className="text-xl font-medium text-white">Analyze Resumes</h1>
+        <p className="text-sm text-gray-300 mt-1">
           Enter job details and let AI match the best candidates.
         </p>
       </div>
       {/*role for job*/}
       <div className="relative">
-        <label className="block text-lg font-medium text-white">
+        <label className="block text-lg font-medium text-gray-300 ">
           Role
         </label>
         <input
@@ -206,11 +206,11 @@ const resumeIds = JSON.parse(
           value={role}
           onChange={handleRoleChange}
           placeholder="Frontend Developer"
-          className="w-full px-3 py-2.5 mt-2 border border-gray-200 rounded-lg text-white"
+          className="w-full px-3 py-2.5 mt-2  border border-gray-100 rounded-lg text-white focus"
         />
         {
           suggestions.length > 0 && (
-            <div className="absolute w-full bg-white border rounded-lg mt-1 shadow-lg z-10">
+            <div className="absolute w-full   border bg-gray-100  rounded-lg mt-1 shadow-lg z-10">
               {
                 suggestions.map(
                   (item, index) => (
@@ -233,8 +233,8 @@ const resumeIds = JSON.parse(
       </div>
 
       {/* Job Description */}
-      <div className="  rounded-xl   my-4 mb-4">
-        <label className="block text-lg font-medium text-white mb-2">
+      <div className="  rounded-xl  my-4 mb-4">
+        <label className="block text-lg font-medium text-gray-300 mb-2">
           Job Description
         </label>
         <textarea
@@ -242,16 +242,16 @@ const resumeIds = JSON.parse(
           placeholder="Paste the job description here... e.g. We are looking for a React developer with 2+ years experience..."
           value={jobDescription}
           onChange={(e) => setJobDescription(e.target.value)}
-          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 resize-none"
+          className="w-full px-3 py-2.5 border border-gray-100 rounded-lg text-sm text-white focus:outline-none focus:ring-1 focus:ring-red-950  resize-none"
         />
         {!jobDescription.trim() && (
-          <p className="text-xs text-red-200 mt-1.5">⚠ Job description is required to analyze.</p>
+          <p className="text-xs text-blue-500 mt-1.5">⚠ Job description is required to analyze.</p>
         )}
       </div>
 
       {/* Required Skills */}
       <div className="   rounded-xl  mb-4">
-        <label className="block text-sm font-medium text-white mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Required Skills
           <span className="text-gray-500 font-normal ml-1">(comma separated)</span>
         </label>
@@ -260,7 +260,7 @@ const resumeIds = JSON.parse(
           placeholder="e.g. React, Node.js, MongoDB, Tailwind CSS"
           value={skills}
           onChange={(e) => setSkills(e.target.value)}
-          className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 placeholder:text-gray-400"
+          className="w-full px-3 py-2.5 border border-gray-100 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 placeholder:text-gray-500"
         />
 
         {/* Skill Tags Preview */}
@@ -282,7 +282,7 @@ const resumeIds = JSON.parse(
 
       {/* Experience Level */}
       <div className="  rounded-xl  mb-6">
-        <label className="block text-sm font-medium text-white mb-3">
+        <label className="block text-sm font-medium text-gray-300 mb-3">
           Experience Level
         </label>
         <div className="grid grid-cols-4 gap-2">
@@ -312,7 +312,7 @@ const resumeIds = JSON.parse(
           onClick={runAnalysis}
           disabled={analyzing || !jobDescription.trim()}
           className={`w-64 py-3 rounded-xl text-sm font-medium transition-colors justify-center flex items-center bg-white
-             cursor-pointer hover:bg-blue-950 hover:text-white hover:border-white hover:border-2 "
+             cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2 "
             }`}
         >
           {analyzing ? (

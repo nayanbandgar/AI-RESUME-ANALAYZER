@@ -78,8 +78,8 @@ export default function UploadResume() {
     <div className="   h-full  flex flex-col items-center justify-center  ">
       {/* Header */}
       <div className="pb-14">
-        <h1 className="text-2xl font-medium text-center text-gray-100">Upload Resumes</h1>
-        <p className="text-sm text-gray-400  text-center mt-1">Upload PDF or DOC files to analyze.</p>
+        <h1 className="text-2xl font-medium text-center text-white">Upload Resumes</h1>
+        <p className="text-sm text-gray-300 text-center mt-1">Upload PDF or DOC files to analyze.</p>
       </div>
 
       {/* Drop Zone */}
@@ -87,7 +87,7 @@ export default function UploadResume() {
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-xl  w-3xl p-14 text-center transition-colors mb-5 ${dragging ? "border-blue-400 bg-blue-50" : "border-white bg-black-100"
+        className={`border-2 border-dashed rounded-xl   w-3xl p-14 text-center transition-colors mb-5 ${dragging ? "border-gray-50 bg-blue-50" : "border-gray-300 bg-black-100"
           }`}
       >
         <svg className="mx-auto mb-3" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round">
@@ -95,9 +95,9 @@ export default function UploadResume() {
           <polyline points="17 8 12 3 7 8" />
           <line x1="12" y1="3" x2="12" y2="15" />
         </svg>
-        <p className="text-sm font-medium text-gray-400 mb-1">Drag & drop resumes here</p>
+        <p className="text-sm font-medium text-gray-300 mb-1">Drag & drop resumes here</p>
         <p className="text-xs text-gray-500 mb-4">Supports PDF, DOC, DOCX</p>
-        <label className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg cursor-pointer hover:bg-blue-950  hover:text-white hover:border-white hover:border-2 transition-colors">
+        <label className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg cursor-pointer hover:bg-red-950  hover:text-white hover:border-white hover:border-2 transition-colors">
           Browse Files
           <input
             type="file"
@@ -111,8 +111,8 @@ export default function UploadResume() {
 
       {/* File List */}
       {files.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-xl p-4 mb-5 hover:bg-blue-950 hover:text-white transition-colors hover:border-white hover:border-2 hover:cursor-pointer ">
-          <p className="text-sm font-medium text-black mb-3 hover:text-white">{files.length} file(s) selected</p>
+        <div className="bg-white border border-gray-100 rounded-xl p-4 mb-5 hover:bg-red-950 hover:text-white transition-colors hover:border-white hover:border-2 hover:cursor-pointer ">
+          <p className="text-sm font-medium text-black hover:text-white mb-3 ">{files.length} file(s) selected</p>
           <div className="flex flex-col gap-2">
             {files.map((file, i) => (
               <div key={i} className="flex items-center gap-3 p-2.5 bg-gray-50 rounded-lg">
@@ -124,7 +124,7 @@ export default function UploadResume() {
                   href={URL.createObjectURL(file)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 text-sm text-blue-600 underline truncate hover:text-blue-800"
+                  className="flex-1 text-sm text-red-600 underline truncate hover:text-red-800"
                 >
                   {file.name}
                 </a>
@@ -145,8 +145,8 @@ export default function UploadResume() {
         onClick={uploadResume}
         disabled={files.length === 0}
         className={`w-64 py-3 rounded-xl text-lg font-medium flex justify-center  transition-colors ${files.length === 0
-          ? "bg-white text-gray-900 cursor-pointer hover:bg-blue-950 hover:text-white hover:border-white hover:border-2"
-          : "bg-white text-black hover:bg-blue-950 hover:text-white hover:border-white hover:border-2"
+          ? "bg-white text-gray-900 cursor-pointer hover:bg-red-950 hover:text-white hover:border-white hover:border-2"
+          : "bg-white text-black hover:bg-red-950 hover:text-white hover:border-white hover:border-2"
           }`}
       >
         Upload {files.length > 0 ? `${files.length} Resume(s)` : "Resumes"}

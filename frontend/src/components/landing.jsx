@@ -8,7 +8,7 @@ export default function Landing() {
       <div className="bg-black-100  border-white border-4 rounded-2xl p-10 w-full max-w-md text-center">
 
         {/* Logo */}
-        <div className="w-16 h-16 rounded-full bg-white border-blue-900 border-2 text-blue-950 font-medium text-lg flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 rounded-full bg-white border-red-900 border-2 text-red-950 font-medium text-lg flex items-center justify-center mx-auto mb-4">
           HR
         </div>
 
@@ -22,13 +22,13 @@ export default function Landing() {
         <div className="flex flex-col gap-3">
           <button
             onClick={() => navigate("/login")}
-            className="w-full py-2.5 bg-white text-gray-900 text-l font-medium rounded-lg  border border-gray-200 hover:border-white hover:bg-blue-950 hover:text-white transition-colors hover:scale-105 duration-200  cursor-pointer"
+            className="w-full py-2.5 bg-white text-gray-900 text-l font-medium rounded-lg  border border-gray-200 hover:border-white hover:bg-red-950 hover:text-white transition-colors hover:scale-105 duration-200  cursor-pointer"
           >
             Login
           </button>
           <button
             onClick={() => navigate("/signup")}
-            className="w-full py-2.5 bg-white text-gray-900 text-l font-medium rounded-lg border border-gray-200 hover:border-white  hover:bg-blue-950  hover:text-white  transition-colors hover:scale-105 duration-200  cursor-pointer"
+            className="w-full py-2.5 bg-white text-gray-900 text-l font-medium rounded-lg border border-gray-200 hover:border-white  hover:bg-red-950  hover:text-white  transition-colors hover:scale-105 duration-200  cursor-pointer"
           >
             Sign Up
           </button>

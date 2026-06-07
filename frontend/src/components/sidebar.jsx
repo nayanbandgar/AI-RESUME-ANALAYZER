@@ -113,17 +113,17 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-screen bg-blue-100 border-r border-gray-100 flex flex-col">
+    <div className="w-64 h-screen bg-linear-to-b from-red-950    to-black border-r border-gray-100 flex flex-col">
 
       {/* Logo */}
       <div className="px-4 py-5 border-b border-gray-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-full bg-white border-blue-900 border-2 text-blue-950 text-sm font-medium flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-white border-red-900 border-2 text-red-950 text-sm font-medium flex items-center justify-center">
             HR
           </div>
           <div>
-            <p className="text-lg font-medium text-blue-950">AI Resume</p>
-            <p className="text-xs text-blue-800">Analyzer</p>
+            <p className="text-lg font-medium text-white">AI Resume</p>
+            <p className="text-xs text-gray-300">Analyzer</p>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function Sidebar() {
           <div key={group.section} className="mb-2">
 
             {/* Section label */}
-            <p className="text-[11px] font-medium text-black uppercase tracking-widest px-2 mb-1">
+            <p className="text-[11px] font-medium text-gray-200 uppercase tracking-widest px-2 mb-1">
               {group.section}
             </p>
 
@@ -145,17 +145,14 @@ export default function Sidebar() {
                 <button
                   key={item.id}
                   onClick={() => navigate(item.path)}
-                  className={"w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors  "}
+                  className={"w-full flex items-center text-white  hover:bg-white  hover:text-black gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors  "}
                 >
-                  <span className={ "text-blue-600"}>
+                  <span className={ "text-gray-400"}>
                     {item.icon}
                   </span>
                   <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && (
-                    <span className="bg-blue-50 text-blue-600 text-[10px] font-medium px-1.5 py-0.5 rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
+                  
+                   
                 </button>
               );
             })}
@@ -166,7 +163,7 @@ export default function Sidebar() {
       {/* User + Logout */}
       <div className="px-4 py-3 border-t border-gray-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-green-50 text-green-700 text-xs font-medium flex items-center justify-center">
+          <div className="w-7 h-7 rounded-full bg-red-50 text-red-700 text-xs font-medium flex items-center justify-center">
             KH
           </div>
           <div className="flex-1 min-w-0">

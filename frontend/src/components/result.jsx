@@ -159,7 +159,7 @@ export default function Results() {
       {/* Results List */}
       <div className={`flex flex-col gap-3 transition-all duration-300 ${selected ? "w-[45%]" : "w-full"}`}>
         <div className="mb-2">
-          <h1 className="text-xl font-medium text-gray-900">Analysis Results</h1>
+          <h1 className="text-xl font-medium text-gray-300">Analysis Results</h1>
           <p className="text-sm text-gray-400 mt-1">Click a candidate to view detailed report.</p>
         </div>
 
@@ -170,8 +170,8 @@ export default function Results() {
               key={f}
               onClick={() => setFilter(f)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${filter === f
-                ? "bg-gray-900 text-white"
-                : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
+                ? "bg-red-950 text-white border-white border-2"
+                : "bg-white border border-gray-200 text-black hover:bg-gray-50"
                 }`}
             >
               {f === "all" ? "All" : statusLabel[f]}
@@ -183,7 +183,7 @@ export default function Results() {
           <div
             key={r.id}
             onClick={() => setSelected(r)}
-            className={`bg-white border rounded-xl p-4 flex items-center gap-4 cursor-pointer transition-all ${selected?.id === r.id
+            className={`bg-red-50 border rounded-xl p-4 flex items-center gap-4 cursor-pointer transition-all ${selected?.id === r.id
               ? "border-blue-300 ring-2 ring-blue-100"
               : "border-gray-100 hover:border-gray-200"
               }`}

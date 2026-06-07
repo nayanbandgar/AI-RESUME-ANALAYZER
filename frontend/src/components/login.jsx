@@ -92,18 +92,18 @@ export default function Login() {
       setErrors(newErrors);
       return;
     }
-    // Add your auth logic here
-    console.log("Login:", form);
-    navigate("/dashboard");
+    
+  
+    navigate("/sidebar/upload-resume");
   };
 
   return (
-    <div className="min-h-screen   bg-linear-to-b from-blue-100 via-blue-900   to-blue-950  flex items-center justify-center px-4">
+    <div className="min-h-screen   bg-linear-to-b from-red-950    to-black flex items-center justify-center px-4">
       <div className="bg-black-100 border border-gray-200 rounded-2xl p-10 w-full max-w-md">
 
         {/* Header */}
         <div className="text-center mb-8 ">
-          <div className="w-16 h-16 rounded-full bg-white border-blue-900 border-2 text-blue-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
+          <div className="w-16 h-16 rounded-full bg-white border-red-900 border-2 text-red-950 font-medium text-lg flex items-center justify-center mx-auto mb-3">
             HR
           </div>
           <h2 className="text-2xl font-medium text-white">Welcome back</h2>
@@ -211,14 +211,14 @@ export default function Login() {
         <button
           type="button"
           onClick={loginUser}
-          className="w-full py-2.5  bg-white text-gray-900 text-l font-medium rounded-lg  hover:bg-blue-950 border-gray-200 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
+          className="w-full py-2.5  bg-white text-gray-900 text-l font-medium rounded-lg  hover:bg-red-950 border-gray-200 hover:border-white hover:border-2 hover:text-white transition-colors cursor-pointer"
         >
           Log in
         </button>
 
         <p className="text-center text-sm text-gray-400 mt-5">
           Don't have an account?{" "}
-          <a href="/signup" className="text-blue-100 hover:underline">Sign up</a>
+          <a href="/signup" className="text-blue-400 hover:underline">Sign up</a>
         </p>
 
       </div>
