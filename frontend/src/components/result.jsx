@@ -125,6 +125,9 @@ export default function Results() {
     const circumference = Math.PI * radius;
     const offset = circumference - (score / 100) * circumference;
     const color = scoreColor(score);
+    db.resumes.find({
+    "user_id": current_user["_id"]
+})
 
     return (
       <div className=" flex flex-col items-center">

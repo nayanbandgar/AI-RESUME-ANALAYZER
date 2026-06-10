@@ -46,6 +46,11 @@ async def login(data: dict):
 
     if user["password"] != password:
         return {"success": False, "message": "Wrong password"}
+#     db.resumes.insert_one({
+#     "user_id": current_user["_id"],
+#     "candidate_name": name,
+#     "email": email
+# })
 
     return {"success": True, "message": "Login Successful"}
 
@@ -58,7 +63,11 @@ async def signup(data: dict):
 
     print(data)
 
-    db.users.insert_one(data)
+#     db.resumes.insert_one({
+#     "user_id": current_user["_id"],
+#     "candidate_name": name,
+#     "email": email
+# })
 
     return {"message": "Signup Successful"}
 
@@ -212,15 +221,15 @@ async def get_roles():
 
 
 
-@router.get("/resume-history")
-async def get_resume_history():
+# @router.get("/resume-history")
+# async def get_resume_history():
 
-    history = list(db.resumeHistory.find().sort("analyzed_at", -1))
+#     history = list(db.resumeHistory.find().sort("analyzed_at", -1))
 
-    for item in history:
-        item["_id"] = str(item["_id"])
+#     for item in history:
+#         item["_id"] = str(item["_id"])
 
-    return {"history": history}
+#     return {"history": history}
 
 @router.get("/candidates")
 async def get_candidates():
@@ -233,6 +242,35 @@ async def get_candidates():
             }
         ).sort("uploaded_at", -1)
     )
+
+    return {
+        "candidates": candidates
+    }
+#counting total resumes for dashboard stats
+@router.get("/dashboard-stats")
+async def dashboard_stats():
+
+    total_resumes = db.resumes.count_documents({})
+
+    total_analysis = db.resumeHistory.count_documents({})
+
+    return {
+        "total_resumes": total_resumes,
+        "total_analysis": total_analysis
+    }
+#top candidate based on score for a specific job description
+@router.get("/top-candidates")
+async def top_candidates():
+
+    candidates = list(
+        db.resumeHistory.find(
+            {},
+            {"_id": 0}
+        )
+        .sort("score", -1)
+        .limit(5)
+    )
+    
 
     return {
         "candidates": candidates

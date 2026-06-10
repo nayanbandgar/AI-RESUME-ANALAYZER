@@ -38,7 +38,7 @@ export default function Signup() {
 
         setShowAlert(false);
 
-        navigate("/sidebar");
+        navigate("/profilepage");
 
       }, 2000);
      
@@ -71,7 +71,7 @@ export default function Signup() {
     } else if (form.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters.";
     }
-
+   
     
     return newErrors;
   };

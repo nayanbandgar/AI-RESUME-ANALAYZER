@@ -40,7 +40,7 @@ export default function Login() {
 
         setShowAlert(false);
 
-        navigate("/sidebar");
+        navigate("/header");
 
       }, 2000);
 
@@ -94,7 +94,7 @@ export default function Login() {
     }
     
   
-    navigate("/sidebar/upload-resume");
+    navigate("/header");
   };
 
   return (
