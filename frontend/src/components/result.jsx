@@ -207,7 +207,7 @@ export default function Results() {
               <p className="text-xs text-gray-400">{r.role}</p>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-lg font-medium" style={{ color: scoreColor(r.score) }}>{r.score}%</p>
+              <p className="text-lg font-medium" style={{ color: scoreColor(r.score) }}>{Math.round(r.score)}%</p>
               <p className="text-[10px] text-gray-400">match</p>
             </div>
           </div>
@@ -256,7 +256,7 @@ export default function Results() {
                 <div key={s.skill}>
                   <div className="flex justify-between mb-1">
                     <span className="text-xs text-gray-500">{s.skill}</span>
-                    <span className="text-xs font-medium" style={{ color: scoreColor(s.score) }}>{s.score}%</span>
+                    <span className="text-xs font-medium" style={{ color: scoreColor(s.score) }}>{Math.round(s.score)}%</span>
                   </div>
                   <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                     <div

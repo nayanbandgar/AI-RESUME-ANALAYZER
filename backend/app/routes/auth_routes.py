@@ -9,6 +9,7 @@ import uuid
 from email.mime.text import MIMEText
 from fastapi import Body
 from app.utils.matcher import calculate_score
+from fastapi.responses import FileResponse
 import uuid
 from bson import ObjectId
 import dotenv
@@ -162,8 +163,10 @@ async def analyze(data: dict):
         result = {
             "candidate_name": resume.get("candidate_name", "Unknown"),
             "email": resume.get("candidate_email", ""),
+            "path": resume.get("path", ""),
+            
             "skills": resume.get("skills", []),
-            "score": float(score),
+            "score": round(float(score), 2),
             "experience": "Fresher",
             "strengths": [],
             "weaknesses": [],
@@ -176,7 +179,7 @@ async def analyze(data: dict):
         "candidate_name": result["candidate_name"],
         "email": result["email"],
         "skills": result["skills"],
-        "score": result["score"],
+        "score": round(float(result["score"]), 2),
         "experience": result["experience"],
         "strengths": result["strengths"],
         "weaknesses": result["weaknesses"],
@@ -275,3 +278,66 @@ async def top_candidates():
     return {
         "candidates": candidates
     }
+# list of recently uploaded resumes for dashboard
+@router.get("/recent-resumes")
+async def recent_resumes():
+
+    resumes = list(
+        db.resumes.find(
+            {},
+            {
+                "_id": 0,
+                "candidate_name": 1,
+                "candidate_email": 1,
+                "uploaded_at": 1
+            }
+        )
+        .sort("uploaded_at", -1)
+        .limit(3)
+    )
+
+    return {
+        "resumes": resumes
+    }
+
+# @router.get("/view-resume/{email}")
+# async def view_resume(email: str):
+
+#     resume = db.resumes.find_one({
+#         "candidate_email": email
+#     })
+
+#     if not resume:
+#         return {"message": "Resume not found"}
+
+#     return FileResponse(
+#         resume["path"],
+#         media_type="application/pdf"
+#     )
+
+
+@router.get("/view-resume/{email}")
+async def view_resume(email: str):
+
+    resume = db.resumes.find_one({
+        "candidate_email": email
+    })
+
+    if not resume:
+        raise HTTPException(
+            status_code=404,
+            detail="Resume not found"
+        )
+
+    file_path = resume.get("path")
+
+    if not os.path.exists(file_path):
+        raise HTTPException(
+            status_code=404,
+            detail=f"File not found: {file_path}"
+        )
+
+    return FileResponse(
+    resume["path"],
+    media_type="application/pdf"
+)
