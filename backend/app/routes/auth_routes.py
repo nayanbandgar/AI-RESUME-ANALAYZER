@@ -268,7 +268,9 @@ async def top_candidates():
     candidates = list(
         db.resumeHistory.find(
             {},
-            {"_id": 0}
+            {"_id": 0,
+             }
+            
         )
         .sort("score", -1)
         .limit(5)

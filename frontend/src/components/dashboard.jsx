@@ -288,49 +288,57 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="flex  flex-wrap gap-6">
 
      
 
       {/* Top Candidates */}
-      <div className="bg-red-100 p-5 rounded-xl shadow  lg:col">
+      <div className="  rounded-xl shadow  lg:col ">
 
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl font-bold  text-white ">
           Top Candidates
         </h2>
+        <div class="flex items-center gap-4">
+    <h2 class=" whitespace-nowrap text-gray-300 mb-2">
+        Highest Matching Candidates for Open Position
+    </h2>
+    <div class="flex-1 border-t border-gray-300"></div>
+</div>
 
-        <div className="grid md:grid-cols-2 gap-4 ">
+        <div className="flex gap-4 flex-wrap "> 
 
           {topCandidates.map((candidate, index) => (
-
             <div
               key={candidate.email || index}
-              className="bg-white rounded-xl p-4 shadow hover:shadow-lg"
+              className="bg-red-100 rounded-xl p-4 shadow hover:shadow-lg  border border-red-300 transition"
             >
 
               <div className="flex justify-between items-start">
 
                 <div>
-                  <h3 className="font-semibold text-lg">
+                  <h3 className="font-semibold text-lg text-red-950">
                     {candidate.candidate_name}
                   </h3>
 
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-800">
                     {candidate.email}
                   </p>
-                </div>
-
-                <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">
+                   <div className="bg-green-700 text-white text-center mt-4 w-16 font-extrabold">
                   {Math.round(candidate.score)}%
                 </div>
+                </div>
+                 <p className="text-gray-600">
+     {candidate.role}
+  </p>
+
+
+               
 
               </div>
 
-              <p className="text-sm text-gray-600 mt-3">
-                {candidate.ai_summary}
-              </p>
+             
 
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 ">
 
                 {candidate.skills?.slice(0, 4).map((skill, i) => (
                   <span
@@ -343,8 +351,9 @@ export default function Dashboard() {
 
               </div>
 
-              <button
-                className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+<div className="  mt-2 border-t  border-black">
+  <button
+                className="mt-2 w-full bg-red-100 text-black py-2 border border-red-800 rounded-lg font-bold hover:bg-red-700 hover:text-white transition"
                 onClick={() =>
                   window.open(
                     `http://127.0.0.1:8000/uploads/${candidate.email}`,
@@ -353,7 +362,8 @@ export default function Dashboard() {
                 }
               >
                 View Resume
-              </button>
+              </button></div>
+              
 
             </div>
 
@@ -363,19 +373,10 @@ export default function Dashboard() {
 
 
       </div>
-       {/* Total Resume */}
-      <div className="bg-red-100 p-6 w-60 h-40 rounded-xl shadow">
-        <h2 className="text-xl font-bold text-center">
-          Total Resumes
-        </h2>
-
-        <p className="text-5xl font-bold text-red-950 text-center mt-4">
-          {stats.total_resumes}
-        </p>
-      </div>
+       
 
       {/* Recent Resumes */}
-      <div className="bg-red-100 p-5 rounded-xl shadow lg:col-span-3 w-80">
+      <div className="bg-red-100 p-5 ml-5 rounded-xl shadow lg:col-span-3 w-80">
 
         <h2 className="text-xl font-bold mb-4">
           Recent Resumes
@@ -409,7 +410,18 @@ export default function Dashboard() {
         )}
 
       </div>
+ {/* Total Resume */}
+       <div><div className="bg-red-100 p-6 w-60 h-40 rounded-xl shadow">
+        <h2 className="text-xl font-bold text-center">
+          Total Resumes
+        </h2>
 
+        <p className="text-5xl font-bold text-red-950 text-center mt-4">
+          {stats.total_resumes}
+        </p>
+      </div></div>
+      
     </div>
+
   );
 }
