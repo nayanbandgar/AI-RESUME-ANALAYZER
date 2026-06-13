@@ -164,7 +164,7 @@ async def analyze(data: dict):
             "candidate_name": resume.get("candidate_name", "Unknown"),
             "email": resume.get("candidate_email", ""),
             "path": resume.get("path", ""),
-            
+            "role":resume.get("role",""),
             "skills": resume.get("skills", []),
             "score": round(float(score), 2),
             "experience": "Fresher",
@@ -185,6 +185,7 @@ async def analyze(data: dict):
         "weaknesses": result["weaknesses"],
         "ai_summary": result["ai_summary"],
         "job_description": jd,
+        "role":result["role"],
         
         "uploaded_at": datetime.utcnow()
     })

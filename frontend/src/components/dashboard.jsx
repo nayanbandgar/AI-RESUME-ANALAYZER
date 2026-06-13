@@ -293,7 +293,7 @@ export default function Dashboard() {
      
 
       {/* Top Candidates */}
-      <div className="  rounded-xl shadow  lg:col ">
+      <div className="  h-60 shadow  lg:col mr-40  ">
 
         <h2 className="text-xl font-bold  text-white ">
           Top Candidates
@@ -310,7 +310,7 @@ export default function Dashboard() {
           {topCandidates.map((candidate, index) => (
             <div
               key={candidate.email || index}
-              className="bg-red-100 rounded-xl p-4 shadow hover:shadow-lg  border border-red-300 transition"
+              className="bg-red-100 p-4 shadow hover:shadow-lg  border border-red-300 transition"
             >
 
               <div className="flex justify-between items-start">
@@ -327,9 +327,8 @@ export default function Dashboard() {
                   {Math.round(candidate.score)}%
                 </div>
                 </div>
-                 <p className="text-gray-600">
-     {candidate.role}
-  </p>
+                <div className="  text-lg font-bold text-black  ">{candidate.role}</div>
+                
 
 
                
@@ -376,50 +375,65 @@ export default function Dashboard() {
        
 
       {/* Recent Resumes */}
-      <div className="bg-red-100 p-5 ml-5 rounded-xl shadow lg:col-span-3 w-80">
+      <div className="bg-red-100  ml-5 grid h-64 shadow  w-96">
 
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl  text-red-950 font-bold p-2  ">
           Recent Resumes
         </h2>
-
+        <div className=" bg-red-950 rounded-xl px-2 mx-2 mb-2 ">
         {recentResumes.length === 0 ? (
           <p>No resumes found.</p>
         ) : (
           recentResumes.map((resume, index) => (
-
             <div
               key={resume.candidate_email || index}
-              className="border-b py-3"
+              className="border-b py-2 flex   "
             >
-              <p className="font-medium">
+              <div><p className="font-medium text-white">
                 {resume.candidate_name}
               </p>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-red-300">
                 {resume.candidate_email}
-              </p>
-
-              <p className="text-xs text-gray-400">
+              </p></div>
+              
+               <div className="flex justify-end ml-10"><p className="text-xs text-red-200 ">
                 {new Date(
                   resume.uploaded_at
                 ).toLocaleString()}
-              </p>
+              </p></div>
             </div>
-
+            
+           
+           
           ))
+          
         )}
-
+       </div>
       </div>
  {/* Total Resume */}
-       <div><div className="bg-red-100 p-6 w-60 h-40 rounded-xl shadow">
+ <div className="flex m-0">
+       <div><div className="bg-red-100 p-6  w-80 h-32  shadow">
         <h2 className="text-xl font-bold text-center">
           Total Resumes
         </h2>
 
-        <p className="text-5xl font-bold text-red-950 text-center mt-4">
+        <p className="text-4xl font-bold text-red-950 text-center mt-4">
           {stats.total_resumes}
         </p>
       </div></div>
+      <div>
+        <div className="bg-red-100 p-6  w-80 h-32  shadow">
+        <h2 className="text-xl font-bold text-center">
+          Total Resumes
+        </h2>
+
+        <p className="text-4xl font-bold text-red-950 text-center mt-4">
+          {stats.total_resumes}
+        </p>
+      </div>
+      </div>
+      </div>
       
     </div>
 

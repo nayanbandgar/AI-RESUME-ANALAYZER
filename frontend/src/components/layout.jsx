@@ -4,11 +4,10 @@ import { Outlet } from "react-router-dom";
 
 export default function Layout() {
   return (
-    <div className=" h-screen bg-linear-to-b from-red-950 to-black">
-     {/* <Sidebar />
-      */}
+    <div className=" h-screen bg-linear-to-b from-black via-red-900 to-black">
+     
       <Header/>
-      <main className=" bg-linear-to-b from-red-950 to-black p-6">
+      <main className="h-screen bg-linear-to-b from-black  via-red-900 to-black p-6">
          
         <Outlet />
       </main>
