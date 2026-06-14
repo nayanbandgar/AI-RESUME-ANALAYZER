@@ -27,29 +27,25 @@ export default function Candidates() {
       console.log(error);
     }
   };
-  const filtered = candidates.filter(
-    (c) =>
-      (c.candidate_name || "")
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
+  const filtered = candidates.filter((c) =>
+  (c.candidate_name || "")
+    .toLowerCase()
+    .includes(search.toLowerCase()) ||
 
-      (c.role || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-        (c.score || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-        (c.uploaded || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
-        (c.candidate_email || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
+  String(c.role || "")
+    .toLowerCase()
+    .includes(search.toLowerCase()) ||
 
-  );
+  String(c.score || "")
+    .includes(search) ||
+
+  (c.email || "")
+    .toLowerCase()
+    .includes(search.toLowerCase())
+);
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-6xl mx-auto">
 
       <div className="mb-6">
         <h1 className="text-xl font-medium text-gray-100">Candidates</h1>
@@ -75,13 +71,13 @@ export default function Candidates() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-red-200">
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Name</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Role</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-gray-800">Name</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-gray-800">Role</th>
 
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Email</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">view resume</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Score</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-800">Uploaded At</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-gray-800">Email</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-gray-800">view resume</th>
+                  <th className="text-left px-4 py-3 text-xs font-bold text-gray-800">Score</th>
+              <th className="text-left px-4 py-3 text-xs font-bold text-gray-800">Uploaded At</th>
             </tr>
           </thead>
           <tbody>
@@ -94,7 +90,7 @@ export default function Candidates() {
                 <tr key={c.id} className={`border-b border-gray-50 hover:bg-gray-50 transition-colors ${i === filtered.length - 1 ? "border-0" : ""}`}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-xs font-medium flex items-center justify-center shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-red-50 text-red-600 text-xs font-medium flex items-center justify-center shrink-0">
                         {
                           (c.candidate_name || "Unknown")
                             .split(" ")
@@ -102,16 +98,26 @@ export default function Candidates() {
                             .join("")
                         }
                       </div>
-                      <span className="font-medium text-gray-800">{c.candidate_name}</span>
+                      <span className="font-medium text-red-950">{c.candidate_name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{c.role}</td>
-                   <td className="px-4 py-3 text-blue-500 text-xs">{c.candidate_email}</td>
-                    <td className="px-4 py-3 text-blue-500 text-xs">{c.filename}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{c.skills?.length || 0}</td>
+                  <td className="px-4 py-3 text-red-500">{c.role}</td>
+                   <td className="px-4 py-3 text-blue-500 text-xs">{c.email}</td>
+                    <td className="px-4 py-3 text-blue-500 text-xs"><button
+    className="bg-blue-500 text-white px-3 py-1 rounded"
+    onClick={() =>
+      window.open(
+        `http://127.0.0.1:8000/view-resume/${c.email}`,
+        "_blank"
+      )
+    }
+  >
+    View Resume
+  </button></td>
+                  <td className="px-4 py-3 font-medium text-green-800 ">{c.score}%</td>
                   
                  
-                  <td className="px-4 py-3">{c.uploaded_at
+                  <td className="px-4 py-3 text-red-800">{c.uploaded_at
                     ? new Date(c.uploaded_at).toLocaleString()
                     : "N/A"}
                   </td>

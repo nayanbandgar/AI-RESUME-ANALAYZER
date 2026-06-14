@@ -111,6 +111,7 @@ async def upload_resume(file: UploadFile = File(...)):
         "resume_text": extracted_text,
         "candidate_name": parsed_data.get("candidate_name", ""),
         "candidate_email": parsed_data.get("email", ""),
+        "role":parsed_data.get("role",""),
         "skills": parsed_data.get("skills", []),
         "uploaded_at": datetime.now()
     }
@@ -179,6 +180,8 @@ async def analyze(data: dict):
         "analysis_id": analysis_id,
         "candidate_name": result["candidate_name"],
         "email": result["email"],
+        "role":result["role"],
+
         "skills": result["skills"],
         "score": round(float(result["score"]), 2),
         "experience": result["experience"],
@@ -186,7 +189,6 @@ async def analyze(data: dict):
         "weaknesses": result["weaknesses"],
         "ai_summary": result["ai_summary"],
         "job_description": jd,
-        "role":result["role"],
         
         "uploaded_at": datetime.utcnow()
     })
@@ -205,11 +207,11 @@ async def save_job(data: dict):
 
     db.jobs.insert_one(
         {
-            "job_title": data["job_title"],
+            "role": data["role"],
             "job_description": data["job_description"],
             "required_skills": data["required_skills"],
             "experience": data["experience"],
-            "role":data["role"],
+            
         }
     )
 
@@ -241,10 +243,11 @@ async def get_roles():
 async def get_candidates():
 
     candidates = list(
-        db.resumes.find(
+        db.resumeHistory.find(
             {},
             {
                 "_id": 0
+                
             }
         ).sort("uploaded_at", -1)
     )
@@ -259,7 +262,7 @@ async def dashboard_stats():
     total_resumes = db.resumes.count_documents({})
 
     total_analysis = db.resumeHistory.count_documents({})
-
+    
     return {
         "total_resumes": total_resumes,
         "total_analysis": total_analysis
@@ -305,6 +308,8 @@ async def recent_resumes():
         "resumes": resumes
     }
 
+#view resumes
+
 # @router.get("/view-resume/{email}")
 # async def view_resume(email: str):
 
@@ -313,61 +318,50 @@ async def recent_resumes():
 #     })
 
 #     if not resume:
-#         return {"message": "Resume not found"}
+#         raise HTTPException(
+#             status_code=404,
+#             detail="Resume not found"
+#         )
+
+#     file_path = resume.get("path")
+
+#     if not os.path.exists(file_path):
+#         raise HTTPException(
+#             status_code=404,
+#             detail=f"File not found: {file_path}"
+#         )
 
 #     return FileResponse(
-#         resume["path"],
-#         media_type="application/pdf"
-#     )
+#     resume["path"],
+#     media_type="application/pdf"
+# )
+# role wise count
+@router.get("/role-wise-count")
+async def role_wise_count():
+    total = db.resumeHistory.count_documents({})
 
-
-@router.get("/view-resume/{email}")
-async def view_resume(email: str):
-
-    resume = db.resumes.find_one({
-        "candidate_email": email
-    })
-
-    if not resume:
-        raise HTTPException(
-            status_code=404,
-            detail="Resume not found"
-        )
-
-    file_path = resume.get("path")
-
-    if not os.path.exists(file_path):
-        raise HTTPException(
-            status_code=404,
-            detail=f"File not found: {file_path}"
-        )
-
-    return FileResponse(
-    resume["path"],
-    media_type="application/pdf"
-)
-
-
-@router.get("/department-overview")
-async def department_overview():
-
-    pipeline = [
-        {
-            "$group": {
-                "_id": "$role",
-                "count": {"$sum": 1}
+    roles = list(
+        db.resumeHistory.aggregate([
+            {
+                "$group": {
+                    "_id": "$role",
+                    "count": {"$sum": 1}
+                }
+            },
+            {
+                "$sort": {"count": -1}
+            },
+            {
+                "$limit": 5
             }
-        },
-        {
-            "$sort": {"count": -1}
-        }
-    ]
-
-    data = list(db.resumes.aggregate(pipeline))
-
-    return {
-        "departments": data
-    }
+        ])
+    )
+    for role in roles:
+        role["percentage"] = round(
+            (role["count"] / total) * 100,
+            1
+        )
+    return {"roles": roles}
 #average matching score
 @router.get("/average-score")
 async def average_score():
@@ -396,4 +390,31 @@ async def average_score():
 
     return {
         "average_score": avg_score
+    }
+
+#match on distribution
+@router.get("/match-distribution")
+async def match_distribution():
+
+    green = db.resumeHistory.count_documents({
+        "score": {"$gte": 80}
+    })
+
+    orange = db.resumeHistory.count_documents({
+        "score": {"$gte": 60, "$lt": 80}
+    })
+
+    yellow = db.resumeHistory.count_documents({
+        "score": {"$gte": 40, "$lt": 60}
+    })
+
+    red = db.resumeHistory.count_documents({
+        "score": {"$lt": 40}
+    })
+
+    return {
+        "green": green,
+        "orange": orange,
+        "yellow": yellow,
+        "red": red
     }

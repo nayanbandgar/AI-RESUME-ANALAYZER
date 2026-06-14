@@ -15,10 +15,10 @@ export default function Results() {
     (candidate, index) => ({
       id: index + 1,
       name: candidate.candidate_name,
-      role: candidate.role || "Candidate",
+      role: candidate.role ,
       email: candidate.email,
       score: candidate.score,
-      role:candidate.role,
+     
       experience: candidate.experience || "Fresher",
       status: candidate.score >= 80
         ? "top"
@@ -29,7 +29,7 @@ export default function Results() {
           "rejected",
       skills:
         candidate.skills || [],
-
+       
       strengths:
         candidate.strengths || [],
 

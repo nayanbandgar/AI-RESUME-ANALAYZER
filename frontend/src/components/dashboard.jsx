@@ -244,24 +244,36 @@ import {
   PieChart,
   Pie,
   Tooltip,
-  Cell
+  Cell,
+  Legend
 } from "recharts";
+import { useNavigate } from "react-router-dom";
+
 
 
 export default function Dashboard() {
 
   const [topCandidates, setTopCandidate] = useState([]);
   const [recentResumes, setRecentResumes] = useState([]);
+  const [averageScore, setAverageScore] = useState(0);
   const [stats, setStats] = useState({
     total_resumes: 0,
   });
-  const [departments, setDepartments] = useState([]);
+  const [roleCounts, setRoleCounts] = useState([]);
+const navigate = useNavigate();
+const [chartData, setChartData] = useState([]);
+
+const COLORS = [
+  "#22c55e", // Green
+  "#f97316", // Orange
+  "#eab308", // Yellow
+  "#ef4444"  // Red
+];
   useEffect(() => {
     fetchStats();
     fetchTopCandidate();
     fetchRecentResumes();
   }, []);
-  const [averageScore, setAverageScore] = useState(0);
   const fetchStats = async () => {
     const response = await axios.get(
       "http://127.0.0.1:8000/dashboard-stats"
@@ -293,20 +305,25 @@ export default function Dashboard() {
       console.log(error);
     }
   };
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
 
-  const fetchDepartments = async () => {
+  useEffect(() => {
+  fetchRoleCounts();
+}, []);
+
+const fetchRoleCounts = async () => {
+  try {
     const response = await axios.get(
-      "http://127.0.0.1:8000/department-overview"
+      "http://127.0.0.1:8000/role-wise-count"
     );
 
-    setDepartments(response.data.role);
-  };
-  useEffect(() => {
-    fetchAverageScore();
-  }, []);
+    setRoleCounts(response.data.roles);
+  } catch (error) {
+    console.log(error);
+  }
+};
+ useEffect(()=>{
+  fetchAverageScore();
+ },[]);
 
   const fetchAverageScore = async () => {
     try {
@@ -322,22 +339,51 @@ export default function Dashboard() {
       console.log(error);
     }
   };
+  
+useEffect(() => {
+  fetchMatchDistribution();
+}, []);
+
+const fetchMatchDistribution = async () => {
+  const response = await axios.get(
+    "http://127.0.0.1:8000/match-distribution"
+  );
+
+  setChartData([
+  {
+    name: "80%+ Match",
+    value: response.data.green
+  },
+  {
+    name: "60-79% Match",
+    value: response.data.orange
+  },
+  {
+    name: "40-59% Match",
+    value: response.data.yellow
+  },
+  {
+    name: "0-39% Match",
+    value: response.data.red
+  }
+]);
+}
   return (
-    <div className="flex  flex-wrap gap-6">
+    <div className="flex fixed flex-wrap gap-6 p-6 ">
 
 
 
       {/* Top Candidates */}
-      <div className="  h-60 shadow  lg:col mr-40  ">
+      <div className="  h-60 shadow  lg:col   ">
 
         <h2 className="text-xl font-bold  text-white ">
           Top Candidates
         </h2>
-        <div class="flex items-center gap-4">
-          <h2 class=" whitespace-nowrap text-gray-300 mb-2">
+        <div className="flex items-center gap-4">
+          <h2 className=" whitespace-nowrap text-gray-300 mb-2">
             Highest Matching Candidates for Open Position
           </h2>
-          <div class="flex-1 border-t border-gray-300"></div>
+          <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
         <div className="flex gap-4 flex-wrap ">
@@ -351,19 +397,20 @@ export default function Dashboard() {
               <div className="flex justify-between items-start">
 
                 <div>
-                  <h3 className="font-semibold text-lg text-red-950">
+                  <h3 className="font-semibold text-sm text-red-950 uppercase">
                     {candidate.candidate_name}
                   </h3>
 
-                  <p className="text-sm text-gray-800">
+                  <p className="text-sm text-blue-600">
                     {candidate.email}
                   </p>
-                  <div className="bg-green-700 text-white text-center mt-4 w-16 font-extrabold">
+                   <p className="  text-sm font-semibold text-red-900 lowercase ">{candidate.role}</p>
+
+                  <div className="bg-green-700 text-white text-center mt-4 w-16 font-extrabold ">
                     {Math.round(candidate.score)}%
                   </div>
                 </div>
-                <div className="  text-lg font-bold text-black  ">{candidate.role}</div>
-
+               
 
 
 
@@ -387,11 +434,12 @@ export default function Dashboard() {
 
               <div className="  mt-2 border-t  border-black">
                 <button
-                  className="mt-2 w-full bg-red-100 text-black py-2 border border-red-800 rounded-lg font-bold hover:bg-red-700 hover:text-white transition"
+                  className="mt-2 w-full bg-red-100 text-black py-2 border  border-red-800 rounded-lg font-bold hover:bg-red-700 hover:text-white transition"
                   onClick={() =>
                     window.open(
-                      `http://127.0.0.1:8000/uploads/${candidate.email}`,
+                      `http://127.0.0.1:8000/view-resume/${candidate.email}`,
                       "_blank"
+                      
                     )
                   }
                 >
@@ -410,29 +458,29 @@ export default function Dashboard() {
 
 
       {/* Recent Resumes */}
-      <div className="bg-red-100  ml-5 grid h-64 shadow  w-96">
+      <div className="bg-red-100   grid h-64 shadow  w-96">
 
         <h2 className="text-xl  text-red-950 font-bold p-2  ">
           Recent Resumes
         </h2>
-        <div className=" bg-red-950 rounded-xl px-2 mx-2 mb-2 ">
+        <div className=" rounded-xl px-2 mx-2 mb-2 ">
           {recentResumes.length === 0 ? (
             <p>No resumes found.</p>
           ) : (
             recentResumes.map((resume, index) => (
               <div
-                key={resume.candidate_email || index}
-                className="border-b py-2 flex   "
+                key={resume.candidate_email || index} 
+                className="border-b p-2 flex justify-between items-center bg-red-100 mt-2 rounded-xl border-red-300 hover:bg-red-200 "
               >
-                <div><p className="font-medium text-white">
+                <div><p className="font-medium text-red-900 uppercase ">
                   {resume.candidate_name}
                 </p>
 
-                  <p className="text-sm text-red-300">
+                  <p className="text-sm text-blue-600">
                     {resume.candidate_email}
                   </p></div>
 
-                <div className="flex justify-end ml-10"><p className="text-xs text-red-200 ">
+                <div className="flex justify-end   "><p className="text-xs text-red-500 text-left  ">
                   {new Date(
                     resume.uploaded_at
                   ).toLocaleString()}
@@ -446,61 +494,110 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      {/* Total Resume */}
+
+      <div>
+         {/* Total Resume */}
       <div className="flex m-0">
-        <div><div className="bg-red-100 p-6  w-80 h-32  shadow">
+        <div><div className="bg-red-100 p-2 w-96 h-22  shadow border-r  border-red-300">
           <h2 className="text-xl font-bold text-center">
             Total Resumes
           </h2>
 
-          <p className="text-4xl font-bold text-red-950 text-center mt-4">
+          <p className="text-4xl font-bold text-red-700 text-center mt-2">
             {stats.total_resumes}
           </p>
         </div></div>
         <div>
-          <div className="bg-red-100 p-6  w-80 h-32  shadow">
+          <div className="bg-red-100 p-2  w-80 h-22  shadow border-r  border-red-300">
             <h2 className="text-xl font-bold text-center">
               Avg Match Score
             </h2>
 
-            <p className="text-4xl font-bold text-red-950 text-center mt-4">
-              {averageScore}%
+            <p className="text-4xl font-bold text-green-900 text-center mt-2">
+                {averageScore}%
             </p>
           </div>
         </div>
-      </div>
-
-      <div className="bg-red-100 p-5 rounded-xl shadow">
-        <h2 className="text-lg font-semibold mb-4">
-          Department Hiring Overview
-        </h2>
-
-        {departments.map((dept, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center border-b py-3"
-          >
-            <p className="font-medium">
-              {dept._id || "Unknown"}
-            </p>
-
-            <span className="bg-red-900 text-white px-3 py-1 rounded-full text-sm">
-              {dept.count}
-            </span>
-            <PieChart width={350} height={300}>
-              <Pie
-                data={departments}
-                dataKey="count"
-                nameKey="_id"
-                outerRadius={100}
-                label
-              />
-              <Tooltip />
-            </PieChart>
+        <div>
+          <div className="bg-red-100 p-2  w-80 h-22 shadow">
+            <h2 className="text-xl font-bold text-center">
+             Upload Resumes
+            </h2>
+<button
+    onClick={() => navigate("/upload")}
+    className=" border-2 border-dashed border-blue-700 text-blue-950 px-4 py-1 rounded-lg hover:bg-blue-700  hover:text-white mx-16 mt-2"
+  >
+    + Upload Resume
+  </button>
+            
           </div>
-        ))}
+        </div>
+      </div>
+  
+      {/* department hiring  */}
+
+  <div className="bg-red-100 p-5 my-5  shadow ">
+
+  <h2 className="text-lg font-bold mb-4 text-red-950">
+      Role Hiring Overview
+  </h2>
+  <div className="flex gap-4 lg:col ">
+  {roleCounts.map((role, index) => (
+    <div
+      key={index}
+      className="justify-between items-center  py-3 bg-yellow-600 rounded-2xl  h-36 w-48 border-red-700 "
+    >
+      <div className="font-medium text-center text-white uppercase p-3">
+        {role._id || "Unknown Role"}
+      </div>
+     
+      <div>
+      <span className="bg-red-900 text-white  py-1 mx-8 my-4 px-6 ">
+        {role.count} Resumes
+      </span>
+      </div>
+      <div className="w-full rounded-full h-2 mt-2">
+      
+       <p className="text-sm text-green-900 mt-4 text-center">
+      {role.percentage}% of total candidates
+    </p>
       </div>
     </div>
+    
+  ))}
+  </div>
+</div></div>
+      
+  {/* matching distribution */}
+      <div className="bg-red-100 p-5 rounded-xl h-84 shadow">
+  <h2 className="text-lg font-bold mb-4 text-red-950">
+    Candidate Match Distribution
+  </h2>
+<div className=" flex">  <PieChart width={300} height={250}>
+    <Pie
+      data={chartData}
+      dataKey="value"
+      cx="50%"
+      cy="50%"
+      outerRadius={80}
+      label
+      className=" flex "
+    >
+      {chartData.map((entry, index) => (
+        <Cell
+          key={index}
+          fill={COLORS[index]}
+        />
+      ))}
+    </Pie>
+<div> <Tooltip />
+    <Legend /></div>
+    
+  </PieChart></div>
+ 
+</div>
+</div>
+    
 
 
   );

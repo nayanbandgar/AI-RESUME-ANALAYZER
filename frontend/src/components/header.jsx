@@ -38,7 +38,7 @@ const [showMenu, setShowMenu] = useState(false);
   };
 
   return (
-    <header className="w-full bg-linear-to-r from-red-900 via-black to-red-900 shadow-lg border-b border-gray-100">
+    <header className="w-full  bg-linear-to-r from-red-900 via-black to-red-900 shadow-lg border-b border-gray-100">
       <div className="flex items-center justify-between px-8 py-4">
 
         {/* Logo */}
