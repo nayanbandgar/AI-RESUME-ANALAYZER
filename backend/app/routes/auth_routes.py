@@ -167,6 +167,7 @@ async def analyze(data: dict):
             "role":resume.get("role",""),
             "skills": resume.get("skills", []),
             "score": round(float(score), 2),
+            "role":resume.get("role",[]),
             "experience": "Fresher",
             "strengths": [],
             "weaknesses": [],
@@ -208,6 +209,7 @@ async def save_job(data: dict):
             "job_description": data["job_description"],
             "required_skills": data["required_skills"],
             "experience": data["experience"],
+            "role":data["role"],
         }
     )
 
@@ -344,3 +346,54 @@ async def view_resume(email: str):
     resume["path"],
     media_type="application/pdf"
 )
+
+
+@router.get("/department-overview")
+async def department_overview():
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$role",
+                "count": {"$sum": 1}
+            }
+        },
+        {
+            "$sort": {"count": -1}
+        }
+    ]
+
+    data = list(db.resumes.aggregate(pipeline))
+
+    return {
+        "departments": data
+    }
+#average matching score
+@router.get("/average-score")
+async def average_score():
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": None,
+                "avg_score": {
+                    "$avg": "$score"
+                }
+            }
+        }
+    ]
+
+    result = list(
+        db.resumeHistory.aggregate(pipeline)
+    )
+
+    avg_score = 0
+
+    if result:
+        avg_score = round(
+            result[0]["avg_score"]
+        )
+
+    return {
+        "average_score": avg_score
+    }

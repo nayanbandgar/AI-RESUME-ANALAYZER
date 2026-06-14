@@ -18,6 +18,7 @@ export default function Results() {
       role: candidate.role || "Candidate",
       email: candidate.email,
       score: candidate.score,
+      role:candidate.role,
       experience: candidate.experience || "Fresher",
       status: candidate.score >= 80
         ? "top"

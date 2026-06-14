@@ -7,7 +7,7 @@
 //   const [showResumes, setShowResumes] = useState(false);
 //   const [stats, setStats] = useState({
 //     total_resumes: 0,
-    
+
 //   });
 
 //   useEffect(() => {
@@ -191,8 +191,8 @@
 
 //   </div>
 // </div>
-      
-      
+
+
 // {/* LIST OF RECENT RESUMES */}
 
 //       <div className="bg-red-100 p-5 rounded-xl max-w-72 shadow">
@@ -232,14 +232,21 @@
 //         </p>
 //       </div>
 
-       
+
 //       </div>
-    
-  
+
+
 //   );
 // }
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  Cell
+} from "recharts";
+
 
 export default function Dashboard() {
 
@@ -248,13 +255,13 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     total_resumes: 0,
   });
-
+  const [departments, setDepartments] = useState([]);
   useEffect(() => {
     fetchStats();
     fetchTopCandidate();
     fetchRecentResumes();
   }, []);
-
+  const [averageScore, setAverageScore] = useState(0);
   const fetchStats = async () => {
     const response = await axios.get(
       "http://127.0.0.1:8000/dashboard-stats"
@@ -286,11 +293,39 @@ export default function Dashboard() {
       console.log(error);
     }
   };
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
 
+  const fetchDepartments = async () => {
+    const response = await axios.get(
+      "http://127.0.0.1:8000/department-overview"
+    );
+
+    setDepartments(response.data.role);
+  };
+  useEffect(() => {
+    fetchAverageScore();
+  }, []);
+
+  const fetchAverageScore = async () => {
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/average-score"
+      );
+
+      setAverageScore(
+        response.data.average_score
+      );
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex  flex-wrap gap-6">
 
-     
+
 
       {/* Top Candidates */}
       <div className="  h-60 shadow  lg:col mr-40  ">
@@ -299,13 +334,13 @@ export default function Dashboard() {
           Top Candidates
         </h2>
         <div class="flex items-center gap-4">
-    <h2 class=" whitespace-nowrap text-gray-300 mb-2">
-        Highest Matching Candidates for Open Position
-    </h2>
-    <div class="flex-1 border-t border-gray-300"></div>
-</div>
+          <h2 class=" whitespace-nowrap text-gray-300 mb-2">
+            Highest Matching Candidates for Open Position
+          </h2>
+          <div class="flex-1 border-t border-gray-300"></div>
+        </div>
 
-        <div className="flex gap-4 flex-wrap "> 
+        <div className="flex gap-4 flex-wrap ">
 
           {topCandidates.map((candidate, index) => (
             <div
@@ -323,19 +358,19 @@ export default function Dashboard() {
                   <p className="text-sm text-gray-800">
                     {candidate.email}
                   </p>
-                   <div className="bg-green-700 text-white text-center mt-4 w-16 font-extrabold">
-                  {Math.round(candidate.score)}%
-                </div>
+                  <div className="bg-green-700 text-white text-center mt-4 w-16 font-extrabold">
+                    {Math.round(candidate.score)}%
+                  </div>
                 </div>
                 <div className="  text-lg font-bold text-black  ">{candidate.role}</div>
-                
 
 
-               
+
+
 
               </div>
 
-             
+
 
               <div className="flex flex-wrap gap-2 ">
 
@@ -350,19 +385,19 @@ export default function Dashboard() {
 
               </div>
 
-<div className="  mt-2 border-t  border-black">
-  <button
-                className="mt-2 w-full bg-red-100 text-black py-2 border border-red-800 rounded-lg font-bold hover:bg-red-700 hover:text-white transition"
-                onClick={() =>
-                  window.open(
-                    `http://127.0.0.1:8000/uploads/${candidate.email}`,
-                    "_blank"
-                  )
-                }
-              >
-                View Resume
-              </button></div>
-              
+              <div className="  mt-2 border-t  border-black">
+                <button
+                  className="mt-2 w-full bg-red-100 text-black py-2 border border-red-800 rounded-lg font-bold hover:bg-red-700 hover:text-white transition"
+                  onClick={() =>
+                    window.open(
+                      `http://127.0.0.1:8000/uploads/${candidate.email}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  View Resume
+                </button></div>
+
 
             </div>
 
@@ -372,7 +407,7 @@ export default function Dashboard() {
 
 
       </div>
-       
+
 
       {/* Recent Resumes */}
       <div className="bg-red-100  ml-5 grid h-64 shadow  w-96">
@@ -381,61 +416,92 @@ export default function Dashboard() {
           Recent Resumes
         </h2>
         <div className=" bg-red-950 rounded-xl px-2 mx-2 mb-2 ">
-        {recentResumes.length === 0 ? (
-          <p>No resumes found.</p>
-        ) : (
-          recentResumes.map((resume, index) => (
-            <div
-              key={resume.candidate_email || index}
-              className="border-b py-2 flex   "
-            >
-              <div><p className="font-medium text-white">
-                {resume.candidate_name}
-              </p>
+          {recentResumes.length === 0 ? (
+            <p>No resumes found.</p>
+          ) : (
+            recentResumes.map((resume, index) => (
+              <div
+                key={resume.candidate_email || index}
+                className="border-b py-2 flex   "
+              >
+                <div><p className="font-medium text-white">
+                  {resume.candidate_name}
+                </p>
 
-              <p className="text-sm text-red-300">
-                {resume.candidate_email}
-              </p></div>
-              
-               <div className="flex justify-end ml-10"><p className="text-xs text-red-200 ">
-                {new Date(
-                  resume.uploaded_at
-                ).toLocaleString()}
-              </p></div>
-            </div>
-            
-           
-           
-          ))
-          
-        )}
-       </div>
+                  <p className="text-sm text-red-300">
+                    {resume.candidate_email}
+                  </p></div>
+
+                <div className="flex justify-end ml-10"><p className="text-xs text-red-200 ">
+                  {new Date(
+                    resume.uploaded_at
+                  ).toLocaleString()}
+                </p></div>
+              </div>
+
+
+
+            ))
+
+          )}
+        </div>
       </div>
- {/* Total Resume */}
- <div className="flex m-0">
-       <div><div className="bg-red-100 p-6  w-80 h-32  shadow">
-        <h2 className="text-xl font-bold text-center">
-          Total Resumes
+      {/* Total Resume */}
+      <div className="flex m-0">
+        <div><div className="bg-red-100 p-6  w-80 h-32  shadow">
+          <h2 className="text-xl font-bold text-center">
+            Total Resumes
+          </h2>
+
+          <p className="text-4xl font-bold text-red-950 text-center mt-4">
+            {stats.total_resumes}
+          </p>
+        </div></div>
+        <div>
+          <div className="bg-red-100 p-6  w-80 h-32  shadow">
+            <h2 className="text-xl font-bold text-center">
+              Avg Match Score
+            </h2>
+
+            <p className="text-4xl font-bold text-red-950 text-center mt-4">
+              {averageScore}%
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-red-100 p-5 rounded-xl shadow">
+        <h2 className="text-lg font-semibold mb-4">
+          Department Hiring Overview
         </h2>
 
-        <p className="text-4xl font-bold text-red-950 text-center mt-4">
-          {stats.total_resumes}
-        </p>
-      </div></div>
-      <div>
-        <div className="bg-red-100 p-6  w-80 h-32  shadow">
-        <h2 className="text-xl font-bold text-center">
-          Total Resumes
-        </h2>
+        {departments.map((dept, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center border-b py-3"
+          >
+            <p className="font-medium">
+              {dept._id || "Unknown"}
+            </p>
 
-        <p className="text-4xl font-bold text-red-950 text-center mt-4">
-          {stats.total_resumes}
-        </p>
+            <span className="bg-red-900 text-white px-3 py-1 rounded-full text-sm">
+              {dept.count}
+            </span>
+            <PieChart width={350} height={300}>
+              <Pie
+                data={departments}
+                dataKey="count"
+                nameKey="_id"
+                outerRadius={100}
+                label
+              />
+              <Tooltip />
+            </PieChart>
+          </div>
+        ))}
       </div>
-      </div>
-      </div>
-      
     </div>
+
 
   );
 }
