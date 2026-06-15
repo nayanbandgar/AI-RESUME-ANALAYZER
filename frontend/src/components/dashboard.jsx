@@ -1,243 +1,5 @@
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// export default function Dashboard() {
-//   const [topCandidates, setTopCandidate] = useState([]);
-//   const [recentResumes, setRecentResumes] = useState([]);
-//   const [showResumes, setShowResumes] = useState(false);
-//   const [stats, setStats] = useState({
-//     total_resumes: 0,
-
-//   });
-
-//   useEffect(() => {
-//     fetchStats();
-//   }, []);
-
-//   const fetchStats = async () => {
-
-//     const response = await axios.get(
-//       "http://127.0.0.1:8000/dashboard-stats"
-//     );
-
-//     setStats(response.data);
-//   };
-//   useEffect(() => {
-//   fetchTopCandidate();
-// }, []);
-
-// const fetchTopCandidate = async () => {
-//   try {
-//     const response = await axios.get(
-//       "http://127.0.0.1:8000/top-candidates"
-//     );
-
-//     setTopCandidate(response.data.candidates);
-
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-// useEffect(() => {
-//   fetchRecentResumes();
-// }, []);
-
-// const fetchRecentResumes = async () => {
-//   try {
-//     const response = await axios.get(
-//       "http://127.0.0.1:8000/recent-resumes"
-//     );
-
-//     setRecentResumes(response.data.resumes);
-
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// const ResumeCard = ({ name, role, match, skills, image }) => {
-//   return (
-//     <div className="bg-white shadow-md rounded-xl p-5 w-64 hover:shadow-lg transition-all duration-300">
-//       {/* Candidate Photo */}
-//       <img
-//         src={image}
-//         alt={name}
-//         className="w-20 h-20 rounded-full mx-auto border-4 border-indigo-500"
-//       />
-
-//       {/* Candidate Info */}
-//       <h3 className="text-lg font-semibold text-gray-800 text-center mt-3">
-//         {name}
-//       </h3>
-//       <p className="text-sm text-gray-500 text-center">{role}</p>
-
-//       {/* Match Badge */}
-//       <div className="flex justify-center mt-2">
-//         <span
-//           className={`px-3 py-1 rounded-full text-white text-sm font-medium ${
-//             match >= 90
-//               ? "bg-green-500"
-//               : match >= 80
-//               ? "bg-yellow-500"
-//               : "bg-red-500"
-//           }`}
-//         >
-//           {match}% Match
-//         </span>
-//       </div>
-
-//       {/* Skills */}
-//       <div className="mt-3 text-center text-xs text-gray-600">
-//         {skills.join(" • ")}
-//       </div>
-
-//       {/* View Resume Button */}
-//       <button className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
-//         View Resume
-//       </button>
-//     </div>
-//   );
-// };
 
 
-
-//   return (
-//     <div className="grid grid-cols-2 gap-6">
-//      <div className="bg-red-100 p-5 rounded-xl shadow">
-//   <h2 className="text-lg font-semibold mb-4">
-//     Top Candidates
-//   </h2>
-
-//   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-//     {topCandidates.map((candidate, index) => (
-
-//       <div
-//         key={index}
-//         className="border rounded-xl p-4 hover:shadow-lg transition"
-//       >
-
-//         <div className="flex items-center justify-between">
-
-//           <div>
-//             <h3 className="font-semibold text-lg">
-//               {candidate.candidate_name}
-//             </h3>
-
-//             <p className="text-sm text-gray-500">
-//               {candidate.email}
-//             </p>
-//           </div>
-
-//           <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">
-//             {candidate.score}%
-//           </div>
-
-//         </div>
-
-//         <div className="mt-3">
-//           <p className="text-sm text-gray-600">
-//             {candidate.ai_summary}
-//           </p>
-//         </div>
-
-//         <div className="flex flex-wrap gap-2 mt-3">
-
-//           {candidate.skills?.slice(0, 4).map((skill, i) => (
-//             <span
-//               key={i}
-//               className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs"
-//             >
-//               {skill}
-//             </span>
-//           ))}
-//           <button className="text-xs text-white bg-blue-500 hover:underline"
-//          onClick={() =>
-//     window.open(
-//       `http://127.0.0.1:8000/view-resume/${candidate.email}`,
-//       "_blank"
-//     )
-//   }
-//         >
-//             View Resumes
-//           </button>
-// {showResumes && (
-//   <div className="mt-4">
-//     {recentResumes.map((resume, index) => (
-//       <div
-//         key={index}
-//         className="bg-white p-4 rounded-xl shadow mb-3"
-//       >
-//         <h3 className="font-semibold">
-//           {resume.candidate_name}
-//         </h3>
-
-//         <p className="text-sm text-gray-500">
-//           {resume.candidate_email}
-//         </p>
-
-//         <p className="text-xs text-gray-400">
-//           {new Date(resume.uploaded_at).toLocaleString()}
-//         </p>
-//       </div>
-//     ))}
-//   </div>
-// )}
-//         </div>
-
-//       </div>
-
-//     ))}
-
-//   </div>
-// </div>
-
-
-// {/* LIST OF RECENT RESUMES */}
-
-//       <div className="bg-red-100 p-5 rounded-xl max-w-72 shadow">
-//   <h2 className="text-lg font-semibold mb-4">
-//     Recent Resumes
-//   </h2>
-
-//   {recentResumes.map((resume, index) => (
-//     <div
-//       key={index}
-//       className="border-b py-3"
-//     >
-//       <p className="font-medium">
-//         {resume.candidate_name}
-//       </p>
-
-//       <p className="text-sm text-gray-500">
-//         {resume.candidate_email}
-//       </p>
-
-//       <p className="text-xs text-gray-400">
-//         {new Date(
-//           resume.uploaded_at
-//         ).toLocaleString()}
-//       </p>
-//     </div>
-//   ))}
-// </div>
-// {/* total resumes */}
-// <div className="bg-red-100 w-56 h-30 p-6 rounded-xl shadow">
-//         <h2 className="text-black text-xl font-bold mb-2 text-center">
-//           Total Resumes
-//         </h2>
-
-//         <p className="text-4xl font-bold text-red-950 mb-2 text-center">
-//           {stats.total_resumes}
-//         </p>
-//       </div>
-
-
-//       </div>
-
-
-//   );
-// }
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -262,6 +24,14 @@ export default function Dashboard() {
   const [roleCounts, setRoleCounts] = useState([]);
 const navigate = useNavigate();
 const [chartData, setChartData] = useState([]);
+const [minScore, setMinScore] = useState([]);
+const [maxScore, setMaxScore] = useState([]);
+const [candidates, setCandidates] = useState([]);
+const matchingCount = candidates.filter((candidate) => {
+  const score = Number(candidate.score || 0);
+
+  return score >= minScore && score <= maxScore;
+}).length;
 
 const COLORS = [
   "#22c55e", // Green
@@ -274,6 +44,21 @@ const COLORS = [
     fetchTopCandidate();
     fetchRecentResumes();
   }, []);
+
+  useEffect(() => {
+  fetchCandidates();
+}, []);
+  const fetchCandidates = async () => {
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:8000/candidates"
+    );
+
+    setCandidates(response.data.candidates);
+  } catch (error) {
+    console.log(error);
+  }
+};
   const fetchStats = async () => {
     const response = await axios.get(
       "http://127.0.0.1:8000/dashboard-stats"
@@ -533,8 +318,8 @@ const fetchMatchDistribution = async () => {
           </div>
         </div>
       </div>
-  
-      {/* department hiring  */}
+      <div className="flex">
+         {/* department hiring  */}
 
   <div className="bg-red-100 p-5 my-5  shadow ">
 
@@ -545,28 +330,88 @@ const fetchMatchDistribution = async () => {
   {roleCounts.map((role, index) => (
     <div
       key={index}
-      className="justify-between items-center  py-3 bg-yellow-600 rounded-2xl  h-36 w-48 border-red-700 "
+      className="justify-between items-center  py-3 bg-yellow-600 rounded-2xl  h-36 w-32 border-red-700 "
     >
       <div className="font-medium text-center text-white uppercase p-3">
         {role._id || "Unknown Role"}
       </div>
      
       <div>
-      <span className="bg-red-900 text-white  py-1 mx-8 my-4 px-6 ">
+      <span className="bg-red-900 text-white  py-1  my-4 px-6 ">
         {role.count} Resumes
       </span>
       </div>
       <div className="w-full rounded-full h-2 mt-2">
       
-       <p className="text-sm text-green-900 mt-4 text-center">
-      {role.percentage}% of total candidates
+       <p className="text-xs font-bold text-green-800 mt-3 text-center">
+      {role.percentage}% total candidates
     </p>
       </div>
     </div>
     
   ))}
   </div>
-</div></div>
+
+  
+</div>
+
+{/* custom score range */}
+<div>
+   <div className="bg-red-100  shadow p-5 w-66 h-57 mt-5 mx-10">
+
+  <h2 className="text-xl font-bold text-red-950 mb-3">
+    Custom Score Range
+  </h2>
+
+  <div className="flex gap-3 mb-2">
+
+    <input
+      type="number"
+      min="0"
+      max="100"
+      value={minScore}
+      onChange={(e) => setMinScore(Number(e.target.value))}
+      className="w-full rounded-lg  text-center border-2 border-yellow-600"
+      placeholder="Min"
+    />
+
+    <input
+      type="number"
+      min="0"
+      max="100"
+      value={maxScore}
+      onChange={(e) => setMaxScore(Number(e.target.value))}
+      className="w-full  rounded-lg  text-center border-2 border-yellow-600 "
+      placeholder="Max"
+    />
+
+  </div>
+
+  <div className="bg-white rounded-lg m-5">
+
+    <p className="text-gray-600 text-xs text-center">
+      Matching Candidates
+    </p>
+
+    <p className="text-xl font-bold text-green-700 text-center">
+      {matchingCount}
+    </p>
+
+  </div>
+
+  <button
+  onClick={() =>
+    navigate(`/candidates?min=${minScore}&max=${maxScore}`)
+  }
+  className="bg-red-800 text-center p-3 rounded-xl text-white mx-12"
+>
+  View Resumes
+</button>
+
+</div>
+  </div></div>
+     
+</div>
       
   {/* matching distribution */}
       <div className="bg-red-100 p-5 rounded-xl h-84 shadow">

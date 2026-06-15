@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+
 
 
 const statusStyle = {
@@ -12,7 +14,35 @@ const statusStyle = {
 export default function Candidates() {
   const [search, setSearch] = useState("");
   const [candidates, setCandidates] = useState([]);
-  useEffect(() => {
+  
+const [searchParams] = useSearchParams();
+
+const min = Number(searchParams.get("min")) || 0;
+const max = Number(searchParams.get("max")) || 100;
+
+const filtered = candidates.filter((c) => {
+  const score = Number(c.score || 0);
+
+  const matchesScore =
+    score >= min && score <= max;
+
+  const matchesSearch =
+    (c.candidate_name || "")
+      .toLowerCase()
+      .includes(search.toLowerCase()) ||
+
+    String(c.role || "")
+      .toLowerCase()
+      .includes(search.toLowerCase()) ||
+
+    (c.candidate_email || "")
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+  return matchesScore && matchesSearch;
+});
+ 
+ useEffect(() => {
     fetchCandidates();
   }, []);
 
@@ -27,22 +57,13 @@ export default function Candidates() {
       console.log(error);
     }
   };
-  const filtered = candidates.filter((c) =>
-  (c.candidate_name || "")
-    .toLowerCase()
-    .includes(search.toLowerCase()) ||
+  
+  
+  
 
-  String(c.role || "")
-    .toLowerCase()
-    .includes(search.toLowerCase()) ||
 
-  String(c.score || "")
-    .includes(search) ||
+  
 
-  (c.email || "")
-    .toLowerCase()
-    .includes(search.toLowerCase())
-);
 
   return (
     <div className="max-w-6xl mx-auto">
