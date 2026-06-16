@@ -206,7 +206,7 @@ const fetchMatchDistribution = async () => {
 
               <div className="flex flex-wrap gap-2 mt-2 ">
 
-                {candidate.skills?.slice(0, 4).map((skill, i) => (
+                {candidate.skills?.slice(0, 3).map((skill, i) => (
                   <span
                     key={i}
                     className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs"
@@ -280,7 +280,7 @@ const fetchMatchDistribution = async () => {
 
       <div>
          {/* Total Resume */}
-      <div className="flex m-0">
+      <div className="flex m-0 mt-2">
         <div><div className="bg-red-100 p-2 w-96 h-22  shadow border-r  border-red-300">
           <h2 className="text-xl font-bold text-center">
             Total Resumes
@@ -316,11 +316,11 @@ const fetchMatchDistribution = async () => {
           </div>
         </div>
       </div>
-      <div className="flex">
+      <div className="flex gap-8">
          {/* department hiring  */}
 
   
-
+      
   <div className="bg-red-100 p-3  shadow-md mt-5 w-100" >
 
   <h2 className="text-lg font-bold mb-4">
@@ -416,7 +416,7 @@ const fetchMatchDistribution = async () => {
   onClick={() =>
     navigate(`/candidates?min=${minScore}&max=${maxScore}`)
   }
-  className="bg-red-800 text-center p-3 rounded-xl text-white mx-12"
+  className="bg-red-800 text-center p-3 rounded-xl text-white mx-28"
 >
   View Resumes
 </button>

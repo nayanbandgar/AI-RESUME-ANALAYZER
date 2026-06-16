@@ -309,39 +309,39 @@ async def recent_resumes():
 
 #view resumes
 
-# @router.get("/view-resume/{email}")
-# async def view_resume(email: str):
+@router.get("/view-resume/{email}")
+async def view_resume(email: str):
 
-#     resume = db.resumes.find_one({
-#         "candidate_email": email
-#     })
+    resume = db.resumes.find_one({
+        "candidate_email": email
+    })
 
-#     if not resume:
-#         raise HTTPException(
-#             status_code=404,
-#             detail="Resume not found"
-#         )
+    if not resume:
+        raise HTTPException(
+            status_code=404,
+            detail="Resume not found"
+        )
 
-#     file_path = resume.get("path")
+    file_path = resume.get("path")
 
-#     if not os.path.exists(file_path):
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"File not found: {file_path}"
-#         )
+    if not os.path.exists(file_path):
+        raise HTTPException(
+            status_code=404,
+            detail=f"File not found: {file_path}"
+        )
 
-#     return FileResponse(
-#     resume["path"],
-#     media_type="application/pdf"
-# )
+    return FileResponse(
+    resume["path"],
+    media_type="application/pdf"
+)
 # role wise count
 
 @router.get("/role-stats")
 async def get_role_stats(role: str = Query(...)):
 
-    total_resumes = db.resumes.count_documents({})
+    total_resumes = db.resumesHistory.count_documents({})
 
-    role_count = db.resumes.count_documents({
+    role_count = db.resumesHistory.count_documents({
         "role": {
             "$regex": f"^{role}$",
             "$options": "i"
