@@ -11,6 +11,7 @@ from fastapi import Body
 from app.utils.matcher import calculate_score
 from fastapi.responses import FileResponse
 import uuid
+from fastapi import Query
 from bson import ObjectId
 import dotenv
 import os
@@ -97,10 +98,7 @@ async def upload_resume(file: UploadFile = File(...)):
     print("TEXT EXTRACTED")
 
     # Parse resume   
-    parsed_data = parse_resume(extracted_text)
-
-    print("PARSED DATA =", parsed_data)
-
+    
     # Save in MongoDB
     parsed_data = parse_resume(extracted_text)
 
@@ -121,6 +119,7 @@ async def upload_resume(file: UploadFile = File(...)):
         "message": "Resume Uploaded Successfully",
         "candidate_name": parsed_data.get("candidate_name"),
         "email": parsed_data.get("email"),
+        "role":parsed_data.get("role"),
         "resume_id": str(inserted.inserted_id)
     }
 
@@ -207,7 +206,7 @@ async def save_job(data: dict):
 
     db.jobs.insert_one(
         {
-            "role": data["role"],
+            "job_title": data["job_title"],
             "job_description": data["job_description"],
             "required_skills": data["required_skills"],
             "experience": data["experience"],
@@ -279,7 +278,7 @@ async def top_candidates():
             
         )
         .sort("score", -1)
-        .limit(5)
+        .limit(4)
     )
     
 
@@ -336,65 +335,36 @@ async def recent_resumes():
 #     media_type="application/pdf"
 # )
 # role wise count
-@router.get("/role-wise-count")
-async def role_wise_count():
-    total = db.resumeHistory.count_documents({})
 
-    roles = list(
-        db.resumeHistory.aggregate([
-            {
-                "$group": {
-                    "_id": "$role",
-                    "count": {"$sum": 1}
-                }
-            },
-            {
-                "$sort": {"count": -1}
-            },
-            {
-                "$limit": 5
-            }
-        ])
-    )
-    for role in roles:
-        role["percentage"] = round(
-            (role["count"] / total) * 100,
-            1
-        )
-    return {"roles": roles}
-#average matching score
-@router.get("/average-score")
-async def average_score():
+@router.get("/role-stats")
+async def get_role_stats(role: str = Query(...)):
 
-    pipeline = [
-        {
-            "$group": {
-                "_id": None,
-                "avg_score": {
-                    "$avg": "$score"
-                }
-            }
+    total_resumes = db.resumes.count_documents({})
+
+    role_count = db.resumes.count_documents({
+        "role": {
+            "$regex": f"^{role}$",
+            "$options": "i"
         }
-    ]
+    })
 
-    result = list(
-        db.resumeHistory.aggregate(pipeline)
-    )
+    percentage = 0
 
-    avg_score = 0
-
-    if result:
-        avg_score = round(
-            result[0]["avg_score"]
+    if total_resumes > 0:
+        percentage = round(
+            (role_count / total_resumes) * 100,
+            2
         )
 
     return {
-        "average_score": avg_score
+        "role": role,
+        "count": role_count,
+        "percentage": percentage
     }
-
 #match on distribution
 @router.get("/match-distribution")
 async def match_distribution():
+
 
     green = db.resumeHistory.count_documents({
         "score": {"$gte": 80}
@@ -418,3 +388,33 @@ async def match_distribution():
         "yellow": yellow,
         "red": red
     }
+@router.get("/average-score")
+async def average_score():
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": None,
+                "avg_score": {
+                    "$avg": "$score"
+                }
+            }
+        }
+    ]
+
+    result = list(
+        db.resumeHistory.aggregate(pipeline)
+    )
+
+    avg_score = 0
+
+    if result:
+        avg_score = round(
+            result[0]["avg_score"],
+            2
+        )
+
+    return {
+        "average_score": avg_score
+    }
+    

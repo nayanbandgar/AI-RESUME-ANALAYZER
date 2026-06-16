@@ -21,7 +21,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     total_resumes: 0,
   });
-  const [roleCounts, setRoleCounts] = useState([]);
+   const [role, setRole] = useState("");
+   const [roleCounts, setRoleCounts] = useState([]);
 const navigate = useNavigate();
 const [chartData, setChartData] = useState([]);
 const [minScore, setMinScore] = useState([]);
@@ -91,17 +92,16 @@ const COLORS = [
     }
   };
 
-  useEffect(() => {
-  fetchRoleCounts();
-}, []);
-
-const fetchRoleCounts = async () => {
+ const fetchRoleCounts = async () => {
   try {
-    const response = await axios.get(
-      "http://127.0.0.1:8000/role-wise-count"
+    const response = await fetch(
+      `http://127.0.0.1:8000/role-stats?role=${role}`
     );
 
-    setRoleCounts(response.data.roles);
+    const data = await response.json();
+
+    setRoleCounts(data);
+
   } catch (error) {
     console.log(error);
   }
@@ -159,7 +159,7 @@ const fetchMatchDistribution = async () => {
 
 
       {/* Top Candidates */}
-      <div className="  h-60 shadow  lg:col   ">
+      <div className="  h-64 shadow  lg:col  w-5xl">
 
         <h2 className="text-xl font-bold  text-white ">
           Top Candidates
@@ -191,7 +191,7 @@ const fetchMatchDistribution = async () => {
                   </p>
                    <p className="  text-sm font-semibold text-red-900 lowercase ">{candidate.role}</p>
 
-                  <div className="bg-green-700 text-white text-center mt-4 w-16 font-extrabold ">
+                  <div className="bg-green-700 text-white text-center mt-2 w-16 font-extrabold ">
                     {Math.round(candidate.score)}%
                   </div>
                 </div>
@@ -204,7 +204,7 @@ const fetchMatchDistribution = async () => {
 
 
 
-              <div className="flex flex-wrap gap-2 ">
+              <div className="flex flex-wrap gap-2 mt-2 ">
 
                 {candidate.skills?.slice(0, 4).map((skill, i) => (
                   <span
@@ -221,11 +221,9 @@ const fetchMatchDistribution = async () => {
                 <button
                   className="mt-2 w-full bg-red-100 text-black py-2 border  border-red-800 rounded-lg font-bold hover:bg-red-700 hover:text-white transition"
                   onClick={() =>
-                    window.open(
-                      `http://127.0.0.1:8000/view-resume/${candidate.email}`,
-                      "_blank"
-                      
-                    )
+                   window.open(
+                     `http://127.0.0.1:8000/view-resume/${candidate.email}`,
+                       "_blank")
                   }
                 >
                   View Resume
@@ -243,7 +241,7 @@ const fetchMatchDistribution = async () => {
 
 
       {/* Recent Resumes */}
-      <div className="bg-red-100   grid h-64 shadow  w-96">
+      <div className="bg-red-100   grid h-64 shadow  w-90">
 
         <h2 className="text-xl  text-red-950 font-bold p-2  ">
           Recent Resumes
@@ -321,43 +319,58 @@ const fetchMatchDistribution = async () => {
       <div className="flex">
          {/* department hiring  */}
 
-  <div className="bg-red-100 p-5 my-5  shadow ">
+  
 
-  <h2 className="text-lg font-bold mb-4 text-red-950">
-      Role Hiring Overview
+  <div className="bg-red-100 p-3  shadow-md mt-5 w-100" >
+
+  <h2 className="text-lg font-bold mb-4">
+    Role Search
   </h2>
-  <div className="flex gap-4 lg:col ">
-  {roleCounts.map((role, index) => (
-    <div
-      key={index}
-      className="justify-between items-center  py-3 bg-yellow-600 rounded-2xl  h-36 w-32 border-red-700 "
+
+  <div className="flex gap-2">
+
+    <input
+      type="text"
+      placeholder="Enter role"
+      value={role}
+      onChange={(e) => setRole(e.target.value)}
+      className="border p-2 rounded-lg flex-1"
+    />
+
+    <button
+      onClick={fetchRoleCounts}
+      className="bg-red-700 text-white px-4 rounded-lg"
     >
-      <div className="font-medium text-center text-white uppercase p-3">
-        {role._id || "Unknown Role"}
-      </div>
-     
-      <div>
-      <span className="bg-red-900 text-white  py-1  my-4 px-6 ">
-        {role.count} Resumes
-      </span>
-      </div>
-      <div className="w-full rounded-full h-2 mt-2">
-      
-       <p className="text-xs font-bold text-green-800 mt-3 text-center">
-      {role.percentage}% total candidates
-    </p>
-      </div>
-    </div>
-    
-  ))}
+      Search
+    </button>
+
   </div>
 
-  
+  {roleCounts && (
+    <div className="mt-4 bg-white p-4 rounded-lg">
+
+      <p>
+        <strong>Role:</strong> {stats.role}
+      </p>
+
+      <p>
+        <strong>Resume Count:</strong> {stats.count}
+      </p>
+
+      <p>
+        <strong>Percentage:</strong> {stats.percentage}%
+      </p>
+
+    </div>
+  )}
+
 </div>
+  
+
 
 {/* custom score range */}
 <div>
-   <div className="bg-red-100  shadow p-5 w-66 h-57 mt-5 mx-10">
+   <div className="bg-red-100  shadow p-5 w-100 h-57 mt-5 mx-10">
 
   <h2 className="text-xl font-bold text-red-950 mb-3">
     Custom Score Range
