@@ -81,7 +81,7 @@ export default function Signup() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-0  // const handleSendOtp = () => {
+ // const handleSendOtp = () => {
   //   if (!form.email.trim()) {
   //     setErrors({ ...errors, email: "Please enter your email before sending OTP." });
   //     return;
