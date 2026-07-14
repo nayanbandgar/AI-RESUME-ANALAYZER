@@ -1,13 +1,16 @@
-import Sidebar from "./Sidebar";
+// import Sidebar from "./Sidebar";
+import Header from "./header.jsx";
 import { Outlet } from "react-router-dom";
 
 export default function Layout() {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto p-6">
+    <div className=" h-screen  bg-linear-to-b from-black via-red-900 to-black">
+     
+      <Header/>
+      
+         
         <Outlet />
-      </main>
+      
     </div>
   );
 }
